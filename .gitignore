@@ -3,6 +3,7 @@ Binaries/
 DerivedDataCache/
 Intermediate/
 Saved/
+Package/
 
 # Visual Studio
 .vs/
