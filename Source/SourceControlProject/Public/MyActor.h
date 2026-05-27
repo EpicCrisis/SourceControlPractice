@@ -1,7 +1,5 @@
 // This project is made by EpicCrisis
-
 #pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "MyActor.generated.h"
