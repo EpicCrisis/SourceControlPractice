@@ -10,8 +10,8 @@ AC_BuildingBlock::AC_BuildingBlock()
 	m_SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("m_SceneComponent"));
 	RootComponent = m_SceneComponent;
 	m_BuildingCube = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_BuildingCube"));
-	//m_BuildingCube->SetupAttachment(m_SceneComponent);
-	m_BuildingCube->AttachToComponent(m_SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	m_BuildingCube->SetupAttachment(m_SceneComponent);
+	//m_BuildingCube->AttachToComponent(m_SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 void AC_BuildingBlock::BeginPlay()
@@ -21,7 +21,7 @@ void AC_BuildingBlock::BeginPlay()
 	RandomizeBuildingMaterial();
 
 	int32 currentZScale = GetActorScale3D().Z;
-	float randIndex = FMath::FRandRange(0.3f, 1.7f);
+	float randIndex = FMath::FRandRange(0.4f, 1.7f);
 	float newScale = currentZScale * randIndex;
 	FVector currentScale = GetActorScale3D();
 	currentScale.Z = newScale;
