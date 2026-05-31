@@ -15,12 +15,20 @@ public:
 	TArray<FString> m_MapRefList;
 	UPROPERTY()
 	TArray<ULevelStreamingDynamic*> m_LoadedStreetList;
+	//UPROPERTY()
+	//TArray<AActor*> m_LoadedStreetListB;
 	UPROPERTY()
 	int32 m_LoadedStreetIndex = 0;
+
+	UPROPERTY()
+	float m_MoveSpeed = 10.0f;
+	UPROPERTY()
+	float m_MoveDistance = 0.0f;
 
 	AC_StreetManager();
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	void OnLevelReady();
 };

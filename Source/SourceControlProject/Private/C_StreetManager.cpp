@@ -1,6 +1,9 @@
 // This project is made by EpicCrisis
 #include "C_StreetManager.h"
 #include "Engine/LevelStreamingDynamic.h"
+#include "LevelInstance/LevelInstanceComponent.h"
+#include "LevelInstance/LevelInstanceSubsystem.h"
+#include "LevelInstance/LevelInstanceActor.h"
 
 AC_StreetManager::AC_StreetManager()
 {
@@ -27,6 +30,7 @@ void AC_StreetManager::BeginPlay()
 					FRotator::ZeroRotator,
 					successMapSpawn
 				));
+			//m_LoadedStreetList[i]->OnLevelShown.AddDynamic(this, &AC_StreetManager::OnLevelReady);
 			++m_LoadedStreetIndex;
 			//we only spawn the first three streets, then load in new streets as the game progresses
 			if (i == 3)
@@ -35,11 +39,22 @@ void AC_StreetManager::BeginPlay()
 			}
 		}
 	}
+
+	//ALevelInstance* LevelInstance = GetWorld()->SpawnActor<ALevelInstance>();
+	//LevelInstance->SetWorldAsset(m_MapRefList[0]);
+	//LevelInstance->SetActorLocation(FVector(0, 0, 0));
+	//LevelInstance->LoadInstance();
 }
 
 void AC_StreetManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	m_MoveDistance += m_MoveSpeed * DeltaTime;
+	//FVector streetLoc = m_LoadedStreetList[0].GetActorLocation();
+}
+
+void AC_StreetManager::OnLevelReady()
+{
 }
 

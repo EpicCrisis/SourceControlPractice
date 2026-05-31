@@ -19,6 +19,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UMaterialInterface*> m_MaterialList;
 
+	UPROPERTY()
+	float m_TargetHeight = 0.0f;
+	UPROPERTY()
+	float m_ChangeRate = 0.0f;
+
 	AC_BuildingBlock();
 
 	virtual void BeginPlay() override;
