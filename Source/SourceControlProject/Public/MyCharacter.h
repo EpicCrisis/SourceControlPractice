@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "MyGameInstance.h"
+#include "C_BulletManager.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -24,6 +25,8 @@ public:
 
 	UPROPERTY()
 	UMyGameInstance* m_MyGameInstance = nullptr;
+	UPROPERTY()
+	AC_BulletManager* m_BulletManager = nullptr;
 
 	AMyCharacter();
 

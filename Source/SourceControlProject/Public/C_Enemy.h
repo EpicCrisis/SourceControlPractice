@@ -13,6 +13,9 @@ class SOURCECONTROLPROJECT_API AC_Enemy : public AActor
 	
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool m_IsActive = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* m_SceneComponent = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBillboardComponent* m_EnemyBB = nullptr;
