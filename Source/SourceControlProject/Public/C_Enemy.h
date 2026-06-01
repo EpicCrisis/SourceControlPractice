@@ -4,34 +4,26 @@
 #include "GameFramework/Actor.h"
 #include "Components/BillboardComponent.h"
 #include "Components/SphereComponent.h"
-#include "C_Bullet.generated.h"
+#include "C_Enemy.generated.h"
 
 UCLASS()
-class SOURCECONTROLPROJECT_API AC_Bullet : public AActor
+class SOURCECONTROLPROJECT_API AC_Enemy : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool m_IsActive = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float m_LifeTime = 10.0f;
-	float m_LifeTimeCounter = 0.0f;
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* m_SceneComponent = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UBillboardComponent* m_BulletBB = nullptr;
+	UBillboardComponent* m_EnemyBB = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* m_SphereCollider = nullptr;
 
-	AC_Bullet();
+	AC_Enemy();
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	
+
 	UFUNCTION()
 	void OnSphereBeginOverlap(
 		UPrimitiveComponent* OverlappedComponent,
@@ -49,7 +41,7 @@ public:
 		int32 OtherBodyIndex);
 
 	UFUNCTION()
-	void ActivateBullet(FVector activeLoc);
+	void ActivateEnemy(FVector activeLoc);
 	UFUNCTION()
-	void DeactivateBullet();
+	void DeactivateEnemy();
 };

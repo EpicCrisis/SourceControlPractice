@@ -1,6 +1,7 @@
 // This project is made by EpicCrisis
 #include "C_BulletManager.h"
 #include "Components/SceneComponent.h"
+#include "C_Bullet.h"
 
 AC_BulletManager::AC_BulletManager()
 {
@@ -18,7 +19,16 @@ void AC_BulletManager::BeginPlay()
 	{
 		for (int32 i = 0; i < m_PooledBullets; ++i)
 		{
-
+			AC_Bullet* newBullet = GetWorld()->SpawnActorDeferred<AC_Bullet>
+				(
+					m_BulletClass,
+					GetActorTransform(),
+					this,
+					nullptr,
+					ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+				);
+			newBullet->FinishSpawning(GetActorTransform());
+			m_BulletList.Add(newBullet);
 		}
 	}
 }
