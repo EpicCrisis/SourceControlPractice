@@ -2,8 +2,9 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "C_BulletManager.h"
 #include "MyGameInstance.generated.h"
+
+class AC_BulletManager;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API UMyGameInstance : public UGameInstance

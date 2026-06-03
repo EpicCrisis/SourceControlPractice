@@ -2,9 +2,11 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BillboardComponent.h"
-#include "Components/SphereComponent.h"
 #include "C_Bullet.generated.h"
+
+class USceneComponent;
+class UBillboardComponent;
+class USphereComponent;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_Bullet : public AActor
@@ -18,7 +20,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_LifeTime = 10.0f;
 	float m_LifeTimeCounter = 0.0f;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_BulletSpeed = 10.0f;
+	UPROPERTY()
+	FVector m_FlyingDirection = FVector::Zero();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* m_SceneComponent = nullptr;
@@ -49,7 +54,7 @@ public:
 		int32 OtherBodyIndex);
 
 	UFUNCTION()
-	void ActivateBullet(FVector activeLoc);
+	void ActivateBullet(FVector activeLoc, FVector direction);
 	UFUNCTION()
 	void DeactivateBullet();
 };

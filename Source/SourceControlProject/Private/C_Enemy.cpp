@@ -56,5 +56,5 @@ void AC_Enemy::ActivateEnemy(FVector activeLoc)
 
 void AC_Enemy::DeactivateEnemy()
 {
-
+	SetActorLocation(FVector(0.0f, 0.0f, -10000.0f));
 }

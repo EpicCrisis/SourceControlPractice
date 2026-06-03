@@ -2,9 +2,11 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BillboardComponent.h"
-#include "Components/SphereComponent.h"
 #include "C_Enemy.generated.h"
+
+class USceneComponent;
+class UBillboardComponent;
+class USphereComponent;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_Enemy : public AActor

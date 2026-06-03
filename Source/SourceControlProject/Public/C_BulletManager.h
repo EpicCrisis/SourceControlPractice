@@ -2,8 +2,10 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "C_Bullet.h"
 #include "C_BulletManager.generated.h"
+
+class AC_Bullet;
+class UMyGameInstance;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_BulletManager : public AActor
@@ -13,6 +15,9 @@ class SOURCECONTROLPROJECT_API AC_BulletManager : public AActor
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* m_SceneComponent = nullptr;
+	UPROPERTY()
+	UMyGameInstance* m_GameInstance = nullptr;
+
 
 	int32 m_PooledBullets = 10;
 
@@ -26,4 +31,5 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	void CheckShootBullet(FVector shootLoc, FVector playerDirection);
 };

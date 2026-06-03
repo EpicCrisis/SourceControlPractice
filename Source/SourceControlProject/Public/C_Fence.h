@@ -2,9 +2,10 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/StaticMeshComponent.h"
-#include "Components/SceneComponent.h"
 #include "C_Fence.generated.h"
+
+class USceneComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_Fence : public AActor

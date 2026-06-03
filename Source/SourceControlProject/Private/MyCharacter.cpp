@@ -1,6 +1,7 @@
 // This project is made by EpicCrisis
 #include "MyCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "C_BulletManager.h"
 #include "MyGameInstance.h"
 
 AMyCharacter::AMyCharacter()
@@ -43,8 +44,10 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	
 	PlayerInputComponent->BindAxis("Turn", this, &AMyCharacter::CharacterTurn);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMyCharacter::CharacterLookUp);	
-	PlayerInputComponent->BindAction("LeftClick", EInputEvent::IE_Pressed, this, &AMyCharacter::CharacterLeftClick);
-	PlayerInputComponent->BindAction("RightClick", EInputEvent::IE_Pressed, this, &AMyCharacter::CharacterRightClick);
+	PlayerInputComponent->BindAction("LeftClick", EInputEvent::IE_Pressed, this, &AMyCharacter::CharacterDownLeftClick);
+	PlayerInputComponent->BindAction("LeftClick", EInputEvent::IE_Released, this, &AMyCharacter::CharacterUpLeftClick);
+	PlayerInputComponent->BindAction("RightClick", EInputEvent::IE_Pressed, this, &AMyCharacter::CharacterDownRightClick);
+	PlayerInputComponent->BindAction("RightClick", EInputEvent::IE_Released, this, &AMyCharacter::CharacterUpRightClick);
 }
 
 void AMyCharacter::CharacterTurn(float Value)
@@ -57,11 +60,53 @@ void AMyCharacter::CharacterLookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
-void AMyCharacter::CharacterLeftClick()
+void AMyCharacter::CharacterDownLeftClick()
 {
+	if (m_IsDownLeftClick) return;
+	m_IsDownLeftClick = true;
+
+	if (m_BulletManager == nullptr) 
+	{
+		m_BulletManager = GetGameInstance<UMyGameInstance>()->m_BulletManager;
+	}
+	m_BulletManager->CheckShootBullet(GetActorLocation(), GetActorForwardVector());
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(
+			-1,                
+			5.0f,              
+			FColor::Green,     
+			TEXT("Click Left Down") 
+		);
+	}
 }
 
-void AMyCharacter::CharacterRightClick()
+void AMyCharacter::CharacterUpLeftClick()
 {
+	if (!m_IsDownLeftClick) return;
+	m_IsDownLeftClick = false;
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(
+			-1,
+			5.0f,
+			FColor::Green,
+			TEXT("Click Left Up")
+		);
+	}
+}
+
+void AMyCharacter::CharacterDownRightClick()
+{
+	if (m_IsDownRightClick) return;
+	m_IsDownRightClick = true;
+}
+
+void AMyCharacter::CharacterUpRightClick()
+{
+	if (m_IsDownRightClick) return;
+	m_IsDownRightClick = false;
 }
 

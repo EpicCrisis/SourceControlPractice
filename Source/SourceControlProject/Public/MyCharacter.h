@@ -2,9 +2,10 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MyGameInstance.h"
-#include "C_BulletManager.h"
 #include "MyCharacter.generated.h"
+
+class UMyGameInstance;
+class AC_BulletManager;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
@@ -22,6 +23,14 @@ public:
 	int32 m_MaxHealth = 100;
 	UPROPERTY()
 	int32 m_CurrentHealth = 100;
+	UPROPERTY()
+	bool m_IsDownLeftClick = false;
+	//UPROPERTY()
+	//bool m_IsUpLeftClick = false;
+	UPROPERTY()
+	bool m_IsDownRightClick = false;
+	//UPROPERTY()
+	//bool m_IsUpRightClick = false;
 
 	UPROPERTY()
 	UMyGameInstance* m_MyGameInstance = nullptr;
@@ -36,6 +45,8 @@ public:
 
 	void CharacterTurn(float Value);
 	void CharacterLookUp(float Value);
-	void CharacterLeftClick();
-	void CharacterRightClick();
+	void CharacterDownLeftClick();
+	void CharacterUpLeftClick();
+	void CharacterDownRightClick();
+	void CharacterUpRightClick();
 };

@@ -14,7 +14,6 @@ AC_Bullet::AC_Bullet()
 	m_BulletBB->SetupAttachment(m_SceneComponent);
 	m_SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("m_SphereCollider"));
 	m_SphereCollider->SetupAttachment(m_SceneComponent);
-
 }
 
 void AC_Bullet::BeginPlay()
@@ -35,6 +34,10 @@ void AC_Bullet::Tick(float DeltaTime)
 	{
 		DeactivateBullet();
 	}
+
+	FVector currentLoc = GetActorLocation();
+	FVector forwardLoc = currentLoc + m_FlyingDirection * m_BulletSpeed;
+	SetActorLocation(forwardLoc);
 }
 
 void AC_Bullet::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -50,11 +53,12 @@ void AC_Bullet::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 {
 }
 
-void AC_Bullet::ActivateBullet(FVector activeLoc)
+void AC_Bullet::ActivateBullet(FVector activeLoc, FVector direction)
 {
 	m_IsActive = true;
 	m_LifeTimeCounter = 0.0f;
 	SetActorLocation(activeLoc);
+	m_FlyingDirection = direction;
 }
 
 void AC_Bullet::DeactivateBullet()
