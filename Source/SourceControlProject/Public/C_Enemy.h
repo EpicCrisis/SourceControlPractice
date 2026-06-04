@@ -7,6 +7,7 @@
 class USceneComponent;
 class UBillboardComponent;
 class USphereComponent;
+class UTexture;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_Enemy : public AActor
@@ -16,6 +17,10 @@ class SOURCECONTROLPROJECT_API AC_Enemy : public AActor
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool m_IsActive = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 m_MaxHealth = 3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 m_CurrentHealth = 3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* m_SceneComponent = nullptr;
@@ -23,6 +28,14 @@ public:
 	UBillboardComponent* m_EnemyBB = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* m_SphereCollider = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* m_Normal = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* m_DamageFlash = nullptr;
+
+	UPROPERTY()
+	FTimerHandle DamageFlashTimer;
 
 	AC_Enemy();
 
@@ -44,6 +57,11 @@ public:
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
+
+	UFUNCTION()
+	void StartDamageFlash();
+	UFUNCTION()
+	void EndDamageFlash();
 
 	UFUNCTION()
 	void ActivateEnemy(FVector activeLoc);

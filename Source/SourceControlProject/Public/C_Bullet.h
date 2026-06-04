@@ -23,7 +23,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_BulletSpeed = 10.0f;
 	UPROPERTY()
-	FVector m_FlyingDirection = FVector::Zero();
+	FVector m_FlyingDirection = FVector::ZeroVector;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 m_BulletDamage = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* m_SceneComponent = nullptr;

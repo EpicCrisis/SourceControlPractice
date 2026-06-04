@@ -23,6 +23,8 @@ void AC_Enemy::BeginPlay()
 
 	m_SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &AC_Enemy::OnSphereBeginOverlap);
 	m_SphereCollider->OnComponentEndOverlap.AddDynamic(this, &AC_Enemy::OnSphereEndOverlap);
+
+	m_CurrentHealth = m_MaxHealth;
 }
 
 void AC_Enemy::Tick(float DeltaTime)
@@ -36,10 +38,14 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	if (OtherActor && OtherActor != this)
 	{
 		if (!m_IsActive) return;
-
 		if (OtherActor && OtherActor->ActorHasTag(TEXT("PlayerBullet")))
 		{
-			DeactivateEnemy();
+			--m_CurrentHealth;
+			StartDamageFlash();
+			if (m_CurrentHealth <= 0)
+			{
+				DeactivateEnemy();
+			}
 		}
 	}
 
@@ -49,12 +55,33 @@ void AC_Enemy::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 {
 }
 
+void AC_Enemy::StartDamageFlash()
+{
+	GetWorldTimerManager().ClearTimer(DamageFlashTimer);
+	m_EnemyBB->SetSprite(m_DamageFlash);
+
+	GetWorldTimerManager().SetTimer(
+		DamageFlashTimer,
+		this,
+		&AC_Enemy::EndDamageFlash,
+		0.2f,
+		false);
+}
+
+void AC_Enemy::EndDamageFlash()
+{
+	GetWorldTimerManager().ClearTimer(DamageFlashTimer);
+	m_EnemyBB->SetSprite(m_Normal);
+}
+
 void AC_Enemy::ActivateEnemy(FVector activeLoc)
 {
-
+	m_IsActive = true;
+	m_CurrentHealth = m_MaxHealth;
 }
 
 void AC_Enemy::DeactivateEnemy()
 {
+	m_IsActive = false;
 	SetActorLocation(FVector(0.0f, 0.0f, -10000.0f));
 }
