@@ -4,6 +4,7 @@
 #include "Components/BillboardComponent.h"
 #include "Components/SphereComponent.h"
 #include "C_Bullet.h"
+#include "MyGameInstance.h"
 
 AC_Enemy::AC_Enemy()
 {
@@ -29,8 +30,25 @@ void AC_Enemy::BeginPlay()
 
 void AC_Enemy::Tick(float DeltaTime)
 {
+	if (!m_IsActive)
+	{
+		return;
+	}
+	
 	Super::Tick(DeltaTime);
 
+	switch (m_EnemyState)
+	{
+	case E_EnemyState::Spawn:
+		HandleSpawn(DeltaTime);
+		break;
+	case E_EnemyState::Chase:		
+
+		break;
+
+	case E_EnemyState::Die:
+		break;
+	}
 }
 
 void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -55,6 +73,40 @@ void AC_Enemy::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 {
 }
 
+void AC_Enemy::SpawnThisEnemy(FVector spawnLoc)
+{
+	//Expand, then shrink a bit
+	SetActorScale3D(FVector(m_InitialScale));
+	SetActorLocation(spawnLoc);
+}
+
+void AC_Enemy::HandleSpawn(float deltaTime)
+{
+	//pop in and do nothing for the first 2 seconds
+	if (m_SpawnCounter > m_SpawnIdleTime)
+	{
+		m_SpawnCounter = 0.0f;
+		m_EnemyState = E_EnemyState::Chase;
+	}
+	else
+	{
+		m_SpawnCounter += deltaTime;
+
+	}
+}
+
+void AC_Enemy::HandleChase()
+{
+	if (!m_PlayerChar)
+	{
+		m_PlayerChar = GetGameInstance<UMyGameInstance>()->m_PlayerChar;
+	}
+}
+
+void AC_Enemy::HandleDeath()
+{
+}
+
 void AC_Enemy::StartDamageFlash()
 {
 	GetWorldTimerManager().ClearTimer(DamageFlashTimer);
@@ -64,7 +116,7 @@ void AC_Enemy::StartDamageFlash()
 		DamageFlashTimer,
 		this,
 		&AC_Enemy::EndDamageFlash,
-		0.2f,
+		0.1f,
 		false);
 }
 

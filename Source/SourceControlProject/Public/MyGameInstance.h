@@ -5,6 +5,7 @@
 #include "MyGameInstance.generated.h"
 
 class AC_BulletManager;
+class AMyCharacter;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API UMyGameInstance : public UGameInstance
@@ -14,6 +15,8 @@ class SOURCECONTROLPROJECT_API UMyGameInstance : public UGameInstance
 public:
 	UPROPERTY(EditAnywhere)
 	AC_BulletManager* m_BulletManager = nullptr;
+	UPROPERTY(EditAnywhere)
+	AMyCharacter* m_PlayerChar = nullptr;
 
 	virtual void Init() override;
 	virtual void Shutdown() override;

@@ -20,6 +20,8 @@ void AMyCharacter::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("The player character is spawned"));
 
 	m_MyGameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	m_MyGameInstance->m_PlayerChar = this;
+	
 	m_CurrentHealth = m_MaxHealth;
 }
 
