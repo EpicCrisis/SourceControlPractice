@@ -29,14 +29,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AMyCharacter* m_PlayerChar = nullptr;
 
-	UPROPERTY()
-	float m_SpawnIdleTime = 2.0f;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_SpawnIdleTime = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_SpawnCounter = 0.0f;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_InitialScale = 1.2f;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_TargetScale = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_CurrentScale = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool m_IsActive = false;
@@ -97,7 +99,8 @@ public:
 	void EndDamageFlash();
 
 	UFUNCTION()
-	void ActivateEnemy(FVector activeLoc);
-	UFUNCTION()
 	void DeactivateEnemy();
+
+	UFUNCTION()
+	void SetEnemyState(E_EnemyState state);
 };

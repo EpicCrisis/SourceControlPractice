@@ -43,10 +43,13 @@ void AC_Enemy::Tick(float DeltaTime)
 		HandleSpawn(DeltaTime);
 		break;
 	case E_EnemyState::Chase:		
-
+		//should slowly move until it reaches center of player
+		//deal collide damage to player
+		HandleChase();
 		break;
-
 	case E_EnemyState::Die:
+		//split in half
+		HandleDeath();
 		break;
 	}
 }
@@ -76,22 +79,30 @@ void AC_Enemy::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 void AC_Enemy::SpawnThisEnemy(FVector spawnLoc)
 {
 	//Expand, then shrink a bit
+	m_IsActive = true;
+	m_CurrentScale = m_InitialScale;
+	m_CurrentHealth = m_MaxHealth;
 	SetActorScale3D(FVector(m_InitialScale));
+	SetEnemyState(E_EnemyState::Spawn);
 	SetActorLocation(spawnLoc);
 }
 
 void AC_Enemy::HandleSpawn(float deltaTime)
 {
-	//pop in and do nothing for the first 2 seconds
+	//pop in and do nothing for the first 1 second
 	if (m_SpawnCounter > m_SpawnIdleTime)
 	{
 		m_SpawnCounter = 0.0f;
-		m_EnemyState = E_EnemyState::Chase;
+		SetEnemyState(E_EnemyState::Chase);
 	}
 	else
 	{
 		m_SpawnCounter += deltaTime;
-
+		if (!FMath::IsNearlyEqual(m_CurrentScale, m_TargetScale, 0.1f))
+		{
+			m_CurrentScale = FMath::FInterpConstantTo(m_CurrentScale, m_TargetScale, deltaTime, 1.0f);
+			SetActorScale3D(FVector(m_CurrentScale));
+		}
 	}
 }
 
@@ -126,14 +137,22 @@ void AC_Enemy::EndDamageFlash()
 	m_EnemyBB->SetSprite(m_Normal);
 }
 
-void AC_Enemy::ActivateEnemy(FVector activeLoc)
-{
-	m_IsActive = true;
-	m_CurrentHealth = m_MaxHealth;
-}
-
 void AC_Enemy::DeactivateEnemy()
 {
 	m_IsActive = false;
 	SetActorLocation(FVector(0.0f, 0.0f, -10000.0f));
+}
+
+void AC_Enemy::SetEnemyState(E_EnemyState state)
+{
+	m_EnemyState = state;
+	switch (state)
+	{
+	case E_EnemyState::Spawn:
+		break;
+	case E_EnemyState::Chase:
+		break;
+	case E_EnemyState::Die:
+		break;
+	}
 }
