@@ -67,6 +67,11 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			{
 				DeactivateEnemy();
 			}
+			AC_Bullet* bullet = Cast<AC_Bullet>(OtherActor);
+			if (bullet)
+			{
+				bullet->DeactivateBullet();
+			}
 		}
 	}
 

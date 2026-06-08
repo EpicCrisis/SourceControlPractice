@@ -24,6 +24,10 @@ public:
 	int32 m_PooledAmount = 5;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_SpawnDistance = 1000.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_SpawnRadius = 200.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_HeightOffset = 300.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AC_Enemy> m_EnemyClass = nullptr;

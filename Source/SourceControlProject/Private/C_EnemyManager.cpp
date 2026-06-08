@@ -66,6 +66,14 @@ void AC_EnemyManager::Tick(float DeltaTime)
 		m_SpawnCounter = 0.0f;
 		FVector nextSpawnLoc = m_CurrentPlayer->GetActorLocation();
 		nextSpawnLoc.Y += m_SpawnDistance;
+
+		//randomize in the circle
+		float angle = FMath::FRandRange(0.0f, 2.0f * PI);
+		float distance = m_SpawnRadius * FMath::Sqrt(FMath::FRand());
+
+		nextSpawnLoc.X += FMath::Cos(angle) * distance;
+		nextSpawnLoc.Z += m_HeightOffset + FMath::Sin(angle) * distance; //make it lift up offset
+
 		SpawnEnemyAt(nextSpawnLoc);
 	}
 	else
