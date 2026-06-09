@@ -36,9 +36,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_InitialScale = 1.2f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float m_TargetScale = 1.0f;
+	float m_DeathTime = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float m_CurrentScale = 1.0f;
+	float m_DeathCounter = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool m_IsActive = false;
@@ -48,9 +48,14 @@ public:
 	int32 m_CurrentHealth = 3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector m_AttackLocation = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* m_SceneComponent = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBillboardComponent* m_EnemyBB = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBillboardComponent* m_KillBB = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* m_SphereCollider = nullptr;
 
@@ -61,6 +66,28 @@ public:
 
 	UPROPERTY()
 	FTimerHandle DamageFlashTimer;
+
+	UPROPERTY()
+	FTimerHandle ShakeTimerHandle;
+
+	UPROPERTY()
+	FVector m_OriginalLoc = FVector::ZeroVector;
+
+	UPROPERTY()
+	float m_ShakeElapsed = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_ShakeDuration = 0.25f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_ShakeIntensity = 20.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_CrossShakeDuration = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_CrossShakeIntensity = 50.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_DamageShakeDuration = 0.25f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_DamageShakeIntensity = 20.0f;
 
 	AC_Enemy();
 
@@ -89,14 +116,21 @@ public:
 	UFUNCTION()
 	void HandleSpawn(float deltaTime);
 	UFUNCTION()
-	void HandleChase();
+	void HandleChase(float deltaTime);
 	UFUNCTION()
-	void HandleDeath();
+	void HandleDeath(float deltaTime);
 
 	UFUNCTION()
 	void StartDamageFlash();
 	UFUNCTION()
 	void EndDamageFlash();
+
+	UFUNCTION()
+	void StartDamageShake(UBillboardComponent* BBComp);
+	UFUNCTION()
+	void UpdateDamageShake(UBillboardComponent* BBComp);
+	UFUNCTION()
+	void EndDamageShake(UBillboardComponent* BBComp);
 
 	UFUNCTION()
 	void DeactivateEnemy();

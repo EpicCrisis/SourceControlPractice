@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "C_Bullet.h"
 #include "MyGameInstance.h"
+#include "MyCharacter.h"
 
 AC_Enemy::AC_Enemy()
 {
@@ -14,6 +15,8 @@ AC_Enemy::AC_Enemy()
 	RootComponent = m_SceneComponent;
 	m_EnemyBB = CreateDefaultSubobject<UBillboardComponent>(TEXT("m_EnemyBB"));
 	m_EnemyBB->SetupAttachment(m_SceneComponent);
+	m_KillBB = CreateDefaultSubobject<UBillboardComponent>(TEXT("m_KillBB"));
+	m_KillBB->SetupAttachment(m_SceneComponent);
 	m_SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("m_SphereCollider"));
 	m_SphereCollider->SetupAttachment(m_SceneComponent);
 }
@@ -26,6 +29,11 @@ void AC_Enemy::BeginPlay()
 	m_SphereCollider->OnComponentEndOverlap.AddDynamic(this, &AC_Enemy::OnSphereEndOverlap);
 
 	m_CurrentHealth = m_MaxHealth;
+
+	if (m_KillBB)
+	{
+		m_KillBB->SetVisibility(false);
+	}
 }
 
 void AC_Enemy::Tick(float DeltaTime)
@@ -45,11 +53,11 @@ void AC_Enemy::Tick(float DeltaTime)
 	case E_EnemyState::Chase:		
 		//should slowly move until it reaches center of player
 		//deal collide damage to player
-		HandleChase();
+		HandleChase(DeltaTime);
 		break;
 	case E_EnemyState::Die:
 		//split in half
-		HandleDeath();
+		HandleDeath(DeltaTime);
 		break;
 	}
 }
@@ -63,9 +71,14 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		{
 			--m_CurrentHealth;
 			StartDamageFlash();
+
+			m_ShakeDuration = m_DamageShakeDuration;
+			m_ShakeIntensity = m_DamageShakeIntensity;
+			StartDamageShake(m_EnemyBB);
 			if (m_CurrentHealth <= 0)
 			{
-				DeactivateEnemy();
+				SetEnemyState(E_EnemyState::Die);
+				//DeactivateEnemy();
 			}
 			AC_Bullet* bullet = Cast<AC_Bullet>(OtherActor);
 			if (bullet)
@@ -74,7 +87,6 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			}
 		}
 	}
-
 }
 
 void AC_Enemy::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -85,9 +97,9 @@ void AC_Enemy::SpawnThisEnemy(FVector spawnLoc)
 {
 	//Expand, then shrink a bit
 	m_IsActive = true;
-	m_CurrentScale = m_InitialScale;
 	m_CurrentHealth = m_MaxHealth;
-	SetActorScale3D(FVector(m_InitialScale));
+	m_EnemyBB->SetWorldScale3D(FVector(1.5f));
+	m_EnemyBB->MarkRenderStateDirty();
 	SetEnemyState(E_EnemyState::Spawn);
 	SetActorLocation(spawnLoc);
 }
@@ -103,24 +115,59 @@ void AC_Enemy::HandleSpawn(float deltaTime)
 	else
 	{
 		m_SpawnCounter += deltaTime;
-		if (!FMath::IsNearlyEqual(m_CurrentScale, m_TargetScale, 0.1f))
-		{
-			m_CurrentScale = FMath::FInterpConstantTo(m_CurrentScale, m_TargetScale, deltaTime, 1.0f);
-			SetActorScale3D(FVector(m_CurrentScale));
-		}
+		FVector currentScale = m_EnemyBB->GetComponentScale();
+		currentScale = FMath::VInterpTo(currentScale, FVector(1.0f), deltaTime, 10.0f);
+		m_EnemyBB->SetWorldScale3D(currentScale);
+		m_EnemyBB->MarkRenderStateDirty();
 	}
 }
 
-void AC_Enemy::HandleChase()
+void AC_Enemy::HandleChase(float deltaTime)
 {
 	if (!m_PlayerChar)
 	{
 		m_PlayerChar = GetGameInstance<UMyGameInstance>()->m_PlayerChar;
 	}
+	m_AttackLocation = m_PlayerChar->GetActorLocation();
+	m_AttackLocation.Y = GetActorLocation().Y; //don't move forward
+	FVector currentLoc = GetActorLocation();
+	currentLoc = FMath::VInterpConstantTo(currentLoc, m_AttackLocation, deltaTime, 100.0f);
+	SetActorLocation(currentLoc);
 }
 
-void AC_Enemy::HandleDeath()
+void AC_Enemy::HandleDeath(float deltaTime)
 {
+	if (m_KillBB && !m_KillBB->IsVisible())
+	{
+		m_KillBB->SetVisibility(true);
+		m_KillBB->SetWorldScale3D(FVector(2.0f));
+
+		//look at player
+		FRotator currentRot = GetActorRotation();
+
+		//avoid z fighting
+		FVector currentLoc = m_KillBB->GetComponentLocation();
+		currentLoc.Y -= 10.0f;
+		m_KillBB->SetWorldLocation(currentLoc);		
+		m_KillBB->MarkRenderStateDirty();
+
+		m_ShakeDuration = m_CrossShakeDuration;
+		m_ShakeIntensity = m_CrossShakeIntensity;
+		StartDamageShake(m_KillBB);
+	}
+	if (m_DeathCounter > m_DeathTime)
+	{
+		m_DeathCounter = 0.0f;
+		DeactivateEnemy();
+	}
+	else
+	{
+		m_DeathCounter += deltaTime;
+		FVector currentScale = m_KillBB->GetComponentScale();
+		currentScale = FMath::VInterpTo(currentScale, FVector(1.0f), deltaTime, 20.0f);
+		m_KillBB->SetWorldScale3D(currentScale);
+		m_KillBB->MarkRenderStateDirty();		
+	}
 }
 
 void AC_Enemy::StartDamageFlash()
@@ -142,10 +189,56 @@ void AC_Enemy::EndDamageFlash()
 	m_EnemyBB->SetSprite(m_Normal);
 }
 
+void AC_Enemy::StartDamageShake(UBillboardComponent* BBComp)
+{
+	m_ShakeElapsed = 0.0f;
+	m_OriginalLoc = BBComp->GetComponentLocation();
+
+	FTimerDelegate timerDel;
+	timerDel.BindUFunction(this, FName("UpdateDamageShake"), BBComp);
+
+	GetWorld()->GetTimerManager().SetTimer(
+		ShakeTimerHandle,
+		timerDel,
+		0.01f, // tick rate (100 fps-like update)
+		true
+	);
+}
+
+void AC_Enemy::UpdateDamageShake(UBillboardComponent* BBComp)
+{
+	m_ShakeElapsed += 0.01f;
+
+	float alpha = m_ShakeElapsed / m_ShakeDuration;
+
+	// optional fade-out
+	float currentIntensity = m_ShakeIntensity * (1.0f - alpha);
+
+	FVector randomOffset = FVector(
+		FMath::FRandRange(-1.0f, 1.0f),
+		FMath::FRandRange(-1.0f, 1.0f),
+		FMath::FRandRange(-1.0f, 1.0f)
+	) * currentIntensity;
+
+	BBComp->SetWorldLocation(m_OriginalLoc + randomOffset);
+
+	if (m_ShakeElapsed >= m_ShakeDuration)
+	{
+		EndDamageShake(BBComp);
+	}
+}
+
+void AC_Enemy::EndDamageShake(UBillboardComponent* BBComp)
+{
+	GetWorld()->GetTimerManager().ClearTimer(ShakeTimerHandle);
+	BBComp->SetWorldLocation(m_OriginalLoc);
+}
+
 void AC_Enemy::DeactivateEnemy()
 {
 	m_IsActive = false;
 	SetActorLocation(FVector(0.0f, 0.0f, -10000.0f));
+	m_KillBB->SetVisibility(false);
 }
 
 void AC_Enemy::SetEnemyState(E_EnemyState state)
