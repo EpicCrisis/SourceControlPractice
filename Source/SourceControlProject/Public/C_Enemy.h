@@ -9,6 +9,7 @@ class UBillboardComponent;
 class USphereComponent;
 class UTexture;
 class AMyCharacter;
+class UC_Shake;
 
 UENUM(BlueprintType)
 enum class E_EnemyState : uint8
@@ -58,6 +59,8 @@ public:
 	UBillboardComponent* m_KillBB = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* m_SphereCollider = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UC_Shake* m_ShakeComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* m_Normal = nullptr;
@@ -67,18 +70,18 @@ public:
 	UPROPERTY()
 	FTimerHandle DamageFlashTimer;
 
-	UPROPERTY()
-	FTimerHandle ShakeTimerHandle;
+	//UPROPERTY()
+	//FTimerHandle ShakeTimerHandle;
 
-	UPROPERTY()
-	FVector m_OriginalLoc = FVector::ZeroVector;
+	//UPROPERTY()
+	//FVector m_OriginalLoc = FVector::ZeroVector;
 
-	UPROPERTY()
-	float m_ShakeElapsed = 0.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float m_ShakeDuration = 0.25f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float m_ShakeIntensity = 20.0f;
+	//UPROPERTY()
+	//float m_ShakeElapsed = 0.0f;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//float m_ShakeDuration = 0.25f;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//float m_ShakeIntensity = 20.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_CrossShakeDuration = 0.5f;
@@ -125,12 +128,12 @@ public:
 	UFUNCTION()
 	void EndDamageFlash();
 
-	UFUNCTION()
-	void StartDamageShake(UBillboardComponent* BBComp);
-	UFUNCTION()
-	void UpdateDamageShake(UBillboardComponent* BBComp);
-	UFUNCTION()
-	void EndDamageShake(UBillboardComponent* BBComp);
+	//UFUNCTION()
+	//void StartDamageShake(UBillboardComponent* BBComp);
+	//UFUNCTION()
+	//void UpdateDamageShake(UBillboardComponent* BBComp);
+	//UFUNCTION()
+	//void EndDamageShake(UBillboardComponent* BBComp);
 
 	UFUNCTION()
 	void DeactivateEnemy();

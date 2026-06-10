@@ -6,6 +6,7 @@
 #include "C_Bullet.h"
 #include "MyGameInstance.h"
 #include "MyCharacter.h"
+#include "C_Shake.h"
 
 AC_Enemy::AC_Enemy()
 {
@@ -19,6 +20,7 @@ AC_Enemy::AC_Enemy()
 	m_KillBB->SetupAttachment(m_SceneComponent);
 	m_SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("m_SphereCollider"));
 	m_SphereCollider->SetupAttachment(m_SceneComponent);
+	m_ShakeComponent = CreateDefaultSubobject<UC_Shake>(TEXT("m_ShakeComponent"));
 }
 
 void AC_Enemy::BeginPlay()
@@ -72,9 +74,10 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			--m_CurrentHealth;
 			StartDamageFlash();
 
-			m_ShakeDuration = m_DamageShakeDuration;
-			m_ShakeIntensity = m_DamageShakeIntensity;
-			StartDamageShake(m_EnemyBB);
+			//m_ShakeDuration = m_DamageShakeDuration;
+			//m_ShakeIntensity = m_DamageShakeIntensity;
+			//StartDamageShake(m_EnemyBB);
+			m_ShakeComponent->StartShake(m_EnemyBB, m_DamageShakeDuration, m_DamageShakeIntensity);
 			if (m_CurrentHealth <= 0)
 			{
 				SetEnemyState(E_EnemyState::Die);
@@ -85,6 +88,11 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			{
 				bullet->DeactivateBullet();
 			}
+		}
+		//collision with player
+		if (OtherActor && OtherActor->ActorHasTag(TEXT("PlayerCharacter")))
+		{
+
 		}
 	}
 }
@@ -145,15 +153,18 @@ void AC_Enemy::HandleDeath(float deltaTime)
 		//look at player
 		FRotator currentRot = GetActorRotation();
 
+		//m_KillBB->Sprite->
+
 		//avoid z fighting
 		FVector currentLoc = m_KillBB->GetComponentLocation();
 		currentLoc.Y -= 10.0f;
 		m_KillBB->SetWorldLocation(currentLoc);		
 		m_KillBB->MarkRenderStateDirty();
 
-		m_ShakeDuration = m_CrossShakeDuration;
-		m_ShakeIntensity = m_CrossShakeIntensity;
-		StartDamageShake(m_KillBB);
+		//m_ShakeDuration = m_CrossShakeDuration;
+		//m_ShakeIntensity = m_CrossShakeIntensity;
+		//StartDamageShake(m_KillBB);
+		m_ShakeComponent->StartShake(m_KillBB, m_CrossShakeDuration, m_CrossShakeIntensity);
 	}
 	if (m_DeathCounter > m_DeathTime)
 	{
@@ -189,50 +200,50 @@ void AC_Enemy::EndDamageFlash()
 	m_EnemyBB->SetSprite(m_Normal);
 }
 
-void AC_Enemy::StartDamageShake(UBillboardComponent* BBComp)
-{
-	m_ShakeElapsed = 0.0f;
-	m_OriginalLoc = BBComp->GetComponentLocation();
+//void AC_Enemy::StartDamageShake(UBillboardComponent* BBComp)
+//{
+//	m_ShakeElapsed = 0.0f;
+//	m_OriginalLoc = BBComp->GetComponentLocation();
+//
+//	FTimerDelegate timerDel;
+//	timerDel.BindUFunction(this, FName("UpdateDamageShake"), BBComp);
+//
+//	GetWorld()->GetTimerManager().SetTimer(
+//		ShakeTimerHandle,
+//		timerDel,
+//		0.01f, // tick rate (100 fps-like update)
+//		true
+//	);
+//}
 
-	FTimerDelegate timerDel;
-	timerDel.BindUFunction(this, FName("UpdateDamageShake"), BBComp);
+//void AC_Enemy::UpdateDamageShake(UBillboardComponent* BBComp)
+//{
+//	m_ShakeElapsed += 0.01f;
+//
+//	float alpha = m_ShakeElapsed / m_ShakeDuration;
+//
+//	// optional fade-out
+//	float currentIntensity = m_ShakeIntensity * (1.0f - alpha);
+//
+//	FVector randomOffset = FVector(
+//		FMath::FRandRange(-1.0f, 1.0f),
+//		FMath::FRandRange(-1.0f, 1.0f),
+//		FMath::FRandRange(-1.0f, 1.0f)
+//	) * currentIntensity;
+//
+//	BBComp->SetWorldLocation(m_OriginalLoc + randomOffset);
+//
+//	if (m_ShakeElapsed >= m_ShakeDuration)
+//	{
+//		EndDamageShake(BBComp);
+//	}
+//}
 
-	GetWorld()->GetTimerManager().SetTimer(
-		ShakeTimerHandle,
-		timerDel,
-		0.01f, // tick rate (100 fps-like update)
-		true
-	);
-}
-
-void AC_Enemy::UpdateDamageShake(UBillboardComponent* BBComp)
-{
-	m_ShakeElapsed += 0.01f;
-
-	float alpha = m_ShakeElapsed / m_ShakeDuration;
-
-	// optional fade-out
-	float currentIntensity = m_ShakeIntensity * (1.0f - alpha);
-
-	FVector randomOffset = FVector(
-		FMath::FRandRange(-1.0f, 1.0f),
-		FMath::FRandRange(-1.0f, 1.0f),
-		FMath::FRandRange(-1.0f, 1.0f)
-	) * currentIntensity;
-
-	BBComp->SetWorldLocation(m_OriginalLoc + randomOffset);
-
-	if (m_ShakeElapsed >= m_ShakeDuration)
-	{
-		EndDamageShake(BBComp);
-	}
-}
-
-void AC_Enemy::EndDamageShake(UBillboardComponent* BBComp)
-{
-	GetWorld()->GetTimerManager().ClearTimer(ShakeTimerHandle);
-	BBComp->SetWorldLocation(m_OriginalLoc);
-}
+//void AC_Enemy::EndDamageShake(UBillboardComponent* BBComp)
+//{
+//	GetWorld()->GetTimerManager().ClearTimer(ShakeTimerHandle);
+//	BBComp->SetWorldLocation(m_OriginalLoc);
+//}
 
 void AC_Enemy::DeactivateEnemy()
 {
