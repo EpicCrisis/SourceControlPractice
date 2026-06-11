@@ -6,6 +6,9 @@
 
 class UMyGameInstance;
 class AC_BulletManager;
+class UStaticMeshComponent;
+class USceneComponent;
+class AC_Wheelchair;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
@@ -13,6 +16,16 @@ class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//UStaticMeshComponent* m_WheelchairSM = nullptr;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//USceneComponent* m_SceneComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AC_Wheelchair> m_WheelchairClass = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AC_Wheelchair* m_Wheelchair = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_StartDelay = 2.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

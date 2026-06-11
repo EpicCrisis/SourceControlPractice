@@ -3,6 +3,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "C_BulletManager.h"
 #include "MyGameInstance.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SceneComponent.h"
+#include "C_Wheelchair.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -11,6 +14,13 @@ AMyCharacter::AMyCharacter()
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationPitch = true;
 	bUseControllerRotationRoll = false;
+
+	//m_SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("m_SceneComponent"));
+	//RootComponent = m_SceneComponent;
+
+	//m_WheelchairSM = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_WheelchairSM"));
+	//m_WheelchairSM->SetupAttachment(RootComponent);
+	//m_WheelchairSM->SetCollisionProfileName(FName("NoCollision"));
 }
 
 void AMyCharacter::BeginPlay()
@@ -23,6 +33,18 @@ void AMyCharacter::BeginPlay()
 	m_MyGameInstance->m_PlayerChar = this;
 	
 	m_CurrentHealth = m_MaxHealth;
+
+	if (m_WheelchairClass)
+	{
+		FTransform tempT = FTransform();
+		tempT.SetLocation(GetActorLocation());
+		m_Wheelchair = GetWorld()->SpawnActor<AC_Wheelchair>(m_WheelchairClass, tempT);
+		this->AttachToActor(m_Wheelchair, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		
+		FVector thisLoc = GetActorLocation();
+		thisLoc.Z += 50.0f;
+		SetActorLocation(thisLoc);
+	}
 }
 
 void AMyCharacter::Tick(float DeltaTime)
@@ -30,9 +52,13 @@ void AMyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (m_IndexCounter > m_StartDelay)
 	{
-		FVector currentLoc = GetActorLocation();
+		//FVector currentLoc = GetActorLocation();
+		//currentLoc.Y += m_MoveSpeed * DeltaTime;
+		//SetActorLocation(currentLoc);
+
+		FVector currentLoc = m_Wheelchair->GetActorLocation();
 		currentLoc.Y += m_MoveSpeed * DeltaTime;
-		SetActorLocation(currentLoc);
+		m_Wheelchair->SetActorLocation(currentLoc);
 	}
 	else
 	{

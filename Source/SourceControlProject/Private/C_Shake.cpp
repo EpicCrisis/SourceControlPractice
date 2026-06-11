@@ -29,6 +29,7 @@ void UC_Shake::StartShake(UBillboardComponent* BBComp, float duration, float int
 
 	FShakeTarget newShake = FShakeTarget();
 
+	//should also check if the target is dead so it stops shaking
 	newShake.ElapsedTime = 0.0f;
 	newShake.BBComp = BBComp;
 	newShake.Duration = duration;
@@ -76,6 +77,11 @@ void UC_Shake::UpdateShake()
 			m_ShakeList.RemoveAt(i);
 			//EndShake();
 		}
+	}
+
+	if (m_ShakeList.Num() == 0)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(m_TimerHandle);
 	}
 
 	//m_ShakeElapsed += 0.01f;
