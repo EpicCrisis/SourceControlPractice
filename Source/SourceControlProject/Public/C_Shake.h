@@ -5,6 +5,7 @@
 #include "C_Shake.generated.h"
 
 class UBillboardComponent;
+class AC_Enemy;
 
 USTRUCT()
 struct FShakeTarget

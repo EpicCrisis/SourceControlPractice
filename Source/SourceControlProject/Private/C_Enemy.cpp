@@ -7,6 +7,8 @@
 #include "MyGameInstance.h"
 #include "MyCharacter.h"
 #include "C_Shake.h"
+#include "NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
 
 AC_Enemy::AC_Enemy()
 {
@@ -71,17 +73,19 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		if (!m_IsActive) return;
 		if (OtherActor && OtherActor->ActorHasTag(TEXT("PlayerBullet")))
 		{
-			--m_CurrentHealth;
-			StartDamageFlash();
-
 			//m_ShakeDuration = m_DamageShakeDuration;
 			//m_ShakeIntensity = m_DamageShakeIntensity;
 			//StartDamageShake(m_EnemyBB);
-			m_ShakeComponent->StartShake(m_EnemyBB, m_DamageShakeDuration, m_DamageShakeIntensity);
+			--m_CurrentHealth;
 			if (m_CurrentHealth <= 0)
 			{
 				SetEnemyState(E_EnemyState::Die);
 				//DeactivateEnemy();
+			}
+			else
+			{
+				StartDamageFlash();
+				m_ShakeComponent->StartShake(m_EnemyBB, m_DamageShakeDuration, m_DamageShakeIntensity);
 			}
 			AC_Bullet* bullet = Cast<AC_Bullet>(OtherActor);
 			if (bullet)
@@ -168,6 +172,28 @@ void AC_Enemy::HandleDeath(float deltaTime)
 	}
 	if (m_DeathCounter > m_DeathTime)
 	{
+		//spawn explosion
+		if (m_ExplodeVFX)
+		{
+			//UNiagaraSystem::
+
+			//UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			//	GetWorld(),
+			//	ExplosionEffect,
+			//	GetActorLocation(),
+			//	FRotator::ZeroRotator
+			//);
+
+			//UNiagaraSystem
+
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+				GetWorld(),
+				m_ExplodeVFX,
+				GetActorLocation(),
+				FRotator::ZeroRotator
+			);
+		}
+
 		m_DeathCounter = 0.0f;
 		DeactivateEnemy();
 	}

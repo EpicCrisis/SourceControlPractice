@@ -1,6 +1,7 @@
 // This project is made by EpicCrisis
 #include "C_Shake.h"
 #include "Components/BillboardComponent.h"
+#include "C_Enemy.h"
 
 UC_Shake::UC_Shake()
 {
