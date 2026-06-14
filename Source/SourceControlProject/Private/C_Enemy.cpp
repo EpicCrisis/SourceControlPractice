@@ -71,6 +71,7 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	if (OtherActor && OtherActor != this)
 	{
 		if (!m_IsActive) return;
+		//if (m_EnemyState == E_EnemyState::Die) return;
 		if (OtherActor && OtherActor->ActorHasTag(TEXT("PlayerBullet")))
 		{
 			//m_ShakeDuration = m_DamageShakeDuration;
@@ -94,7 +95,8 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			}
 		}
 		//collision with player
-		if (OtherActor && OtherActor->ActorHasTag(TEXT("PlayerCharacter")))
+		if (OtherActor && OtherActor->ActorHasTag(TEXT("PlayerCharacter"))
+			&& m_EnemyState != E_EnemyState::Die)
 		{
 			AMyCharacter* tempChar = Cast<AMyCharacter>(OtherActor);
 			tempChar->TakePlayerDamage(m_AttackDamage);
