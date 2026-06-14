@@ -50,6 +50,8 @@ public:
 	int32 m_MaxHealth = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 m_CurrentHealth = 3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 m_AttackDamage = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector m_AttackLocation = FVector::ZeroVector;
@@ -138,6 +140,8 @@ public:
 	//UFUNCTION()
 	//void EndDamageShake(UBillboardComponent* BBComp);
 
+	UFUNCTION()
+	void ExplodeThenDisappear();
 	UFUNCTION()
 	void DeactivateEnemy();
 

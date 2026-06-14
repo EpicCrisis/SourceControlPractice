@@ -96,7 +96,11 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		//collision with player
 		if (OtherActor && OtherActor->ActorHasTag(TEXT("PlayerCharacter")))
 		{
+			AMyCharacter* tempChar = Cast<AMyCharacter>(OtherActor);
+			tempChar->TakePlayerDamage(m_AttackDamage);
 
+			//deactivate self and explode
+			ExplodeThenDisappear();
 		}
 	}
 }
@@ -172,30 +176,32 @@ void AC_Enemy::HandleDeath(float deltaTime)
 	}
 	if (m_DeathCounter > m_DeathTime)
 	{
+		ExplodeThenDisappear();
+
 		//spawn explosion
-		if (m_ExplodeVFX)
-		{
-			//UNiagaraSystem::
+		//if (m_ExplodeVFX)
+		//{
+		//	//UNiagaraSystem::
+		//
+		//	//UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+		//	//	GetWorld(),
+		//	//	ExplosionEffect,
+		//	//	GetActorLocation(),
+		//	//	FRotator::ZeroRotator
+		//	//);
+		//
+		//	//UNiagaraSystem
+		//
+		//	UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+		//		GetWorld(),
+		//		m_ExplodeVFX,
+		//		GetActorLocation(),
+		//		FRotator::ZeroRotator
+		//	);
+		//}
 
-			//UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			//	GetWorld(),
-			//	ExplosionEffect,
-			//	GetActorLocation(),
-			//	FRotator::ZeroRotator
-			//);
-
-			//UNiagaraSystem
-
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-				GetWorld(),
-				m_ExplodeVFX,
-				GetActorLocation(),
-				FRotator::ZeroRotator
-			);
-		}
-
-		m_DeathCounter = 0.0f;
-		DeactivateEnemy();
+		//m_DeathCounter = 0.0f;
+		//DeactivateEnemy();
 	}
 	else
 	{
@@ -270,6 +276,21 @@ void AC_Enemy::EndDamageFlash()
 //	GetWorld()->GetTimerManager().ClearTimer(ShakeTimerHandle);
 //	BBComp->SetWorldLocation(m_OriginalLoc);
 //}
+
+void AC_Enemy::ExplodeThenDisappear()
+{
+	if (m_ExplodeVFX)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			m_ExplodeVFX,
+			GetActorLocation(),
+			FRotator::ZeroRotator
+		);
+	}
+	m_DeathCounter = 0.0f;
+	DeactivateEnemy();
+}
 
 void AC_Enemy::DeactivateEnemy()
 {

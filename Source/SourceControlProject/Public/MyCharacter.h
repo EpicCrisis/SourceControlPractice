@@ -2,6 +2,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Blueprint/UserWidget.h"
 #include "MyCharacter.generated.h"
 
 class UMyGameInstance;
@@ -9,6 +10,8 @@ class AC_BulletManager;
 class UStaticMeshComponent;
 class USceneComponent;
 class AC_Wheelchair;
+class UC_FirstHud;
+class UCSecondHud;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
@@ -25,6 +28,17 @@ public:
 	TSubclassOf<AC_Wheelchair> m_WheelchairClass = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AC_Wheelchair* m_Wheelchair = nullptr;
+	
+	//UPROPERTY()
+	//UC_FirstHUD* m_PlayerHUD = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCSecondHud* m_NewPlayerHud = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UCSecondHud> m_SecondHudClass = nullptr;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//UUserWidget* m_PlayerHud = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_StartDelay = 2.0f;
@@ -33,9 +47,9 @@ public:
 	UPROPERTY()
 	float m_IndexCounter = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 m_MaxHealth = 100;
+	int32 m_MaxHealth = 3;
 	UPROPERTY()
-	int32 m_CurrentHealth = 100;
+	int32 m_CurrentHealth = 3;
 	UPROPERTY()
 	bool m_IsDownLeftClick = false;
 	//UPROPERTY()
@@ -62,4 +76,7 @@ public:
 	void CharacterUpLeftClick();
 	void CharacterDownRightClick();
 	void CharacterUpRightClick();
+
+	UFUNCTION()
+	void TakePlayerDamage(int32 damage);
 };

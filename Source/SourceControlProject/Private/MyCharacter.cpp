@@ -6,6 +6,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "C_Wheelchair.h"
+#include "C_FirstHud.h"
+#include "CSecondHud.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -44,6 +46,18 @@ void AMyCharacter::BeginPlay()
 		FVector thisLoc = GetActorLocation();
 		thisLoc.Z += 50.0f;
 		SetActorLocation(thisLoc);
+	}
+
+	if (m_SecondHudClass)
+	{
+		m_NewPlayerHud = CreateWidget<UCSecondHud>(
+			GetWorld(),
+			m_SecondHudClass
+		);
+		if (m_NewPlayerHud)
+		{
+			m_NewPlayerHud->AddToViewport();
+		}
 	}
 }
 
@@ -136,5 +150,16 @@ void AMyCharacter::CharacterUpRightClick()
 {
 	if (m_IsDownRightClick) return;
 	m_IsDownRightClick = false;
+}
+
+void AMyCharacter::TakePlayerDamage(int32 damage)
+{
+	m_CurrentHealth -= damage;
+
+	if (m_NewPlayerHud)
+	{
+		FText newText = FText::Format(FText::FromString(TEXT("HEALTH : {0}")), FText::AsNumber(m_CurrentHealth));
+		m_NewPlayerHud->SetHealthText(newText);
+	}
 }
 
