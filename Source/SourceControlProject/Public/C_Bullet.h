@@ -7,6 +7,7 @@
 class USceneComponent;
 class UBillboardComponent;
 class USphereComponent;
+class AC_BulletManager;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_Bullet : public AActor
@@ -14,7 +15,8 @@ class SOURCECONTROLPROJECT_API AC_Bullet : public AActor
 	GENERATED_BODY()
 	
 public:	
-
+	UPROPERTY()
+	AC_BulletManager* m_BulletManager = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool m_IsActive = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

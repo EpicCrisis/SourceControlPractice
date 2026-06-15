@@ -6,6 +6,8 @@
 
 class AC_Bullet;
 class UMyGameInstance;
+class UCSecondHud;
+class AMyCharacter;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_BulletManager : public AActor
@@ -18,8 +20,18 @@ public:
 	UPROPERTY()
 	UMyGameInstance* m_GameInstance = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AMyCharacter* m_PlayerCharacter = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCSecondHud* m_NewPlayerHud = nullptr;
 
-	int32 m_PooledBullets = 10;
+	UPROPERTY()
+	bool m_DoOnce = false;
+
+	UPROPERTY()
+	int32 m_PooledBullet = 10;
+	UPROPERTY()
+	int32 m_GotBullet = 10;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AC_Bullet> m_BulletClass;
@@ -32,4 +44,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void CheckShootBullet(FVector shootLoc, FVector playerDirection);
+	void SetBulletText(int32 numberBullet);
 };

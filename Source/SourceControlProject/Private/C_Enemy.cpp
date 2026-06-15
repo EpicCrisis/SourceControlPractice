@@ -9,6 +9,8 @@
 #include "C_Shake.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
+#include "CSecondHud.h"
+#include "Components/TextBlock.h"
 
 AC_Enemy::AC_Enemy()
 {
@@ -82,11 +84,27 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			{
 				SetEnemyState(E_EnemyState::Die);
 				//DeactivateEnemy();
+				if (!m_NewPlayerHud)
+				{
+					m_NewPlayerHud = m_PlayerChar->m_NewPlayerHud;
+				}
+				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
 			}
 			else
 			{
 				StartDamageFlash();
 				m_ShakeComponent->StartShake(m_EnemyBB, m_DamageShakeDuration, m_DamageShakeIntensity);
+
+				if (!m_NewPlayerHud)
+				{
+					m_NewPlayerHud = m_PlayerChar->m_NewPlayerHud;
+				}
+				FText newText = FText::Format(
+					FText::FromString(TEXT("ENEMY : {0}")), 
+					FText::AsNumber(m_CurrentHealth)
+				);
+				m_NewPlayerHud->SetEnemyText(newText);
+				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Visible);
 			}
 			AC_Bullet* bullet = Cast<AC_Bullet>(OtherActor);
 			if (bullet)
@@ -103,6 +121,8 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 			//deactivate self and explode
 			ExplodeThenDisappear();
+
+			m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }

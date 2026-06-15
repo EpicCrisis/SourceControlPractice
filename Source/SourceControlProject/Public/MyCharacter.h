@@ -35,6 +35,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCSecondHud* m_NewPlayerHud = nullptr;
 
+	UPROPERTY()
+	float m_DistanceTravelled = 0.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UCSecondHud> m_SecondHudClass = nullptr;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)

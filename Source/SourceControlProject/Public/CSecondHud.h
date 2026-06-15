@@ -12,9 +12,21 @@ class SOURCECONTROLPROJECT_API UCSecondHud : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* m_HealthText = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* m_DistanceText = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* m_BulletText = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* m_EnemyText = nullptr;
 
 	UFUNCTION(BlueprintCallable)
 	void SetHealthText(const FText& newMessage);
+	UFUNCTION(BlueprintCallable)
+	void SetDistanceText(const FText& newMessage);
+	UFUNCTION(BlueprintCallable)
+	void SetBulletText(const FText& newMessage);
+	UFUNCTION(BlueprintCallable)
+	void SetEnemyText(const FText& newMessage);
 };

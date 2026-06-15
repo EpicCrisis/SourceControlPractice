@@ -11,6 +11,7 @@ class UTexture;
 class AMyCharacter;
 class UC_Shake;
 class UNiagaraSystem;
+class UCSecondHud;
 
 UENUM(BlueprintType)
 enum class E_EnemyState : uint8
@@ -32,6 +33,9 @@ public:
 	AMyCharacter* m_PlayerChar = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr <UNiagaraSystem> m_ExplodeVFX = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCSecondHud* m_NewPlayerHud = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_SpawnIdleTime = 1.0f;

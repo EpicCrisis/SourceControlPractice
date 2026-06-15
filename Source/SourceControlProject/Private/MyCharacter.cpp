@@ -8,6 +8,7 @@
 #include "C_Wheelchair.h"
 #include "C_FirstHud.h"
 #include "CSecondHud.h"
+#include "Components/TextBlock.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -57,6 +58,7 @@ void AMyCharacter::BeginPlay()
 		if (m_NewPlayerHud)
 		{
 			m_NewPlayerHud->AddToViewport();
+			m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }
@@ -73,6 +75,20 @@ void AMyCharacter::Tick(float DeltaTime)
 		FVector currentLoc = m_Wheelchair->GetActorLocation();
 		currentLoc.Y += m_MoveSpeed * DeltaTime;
 		m_Wheelchair->SetActorLocation(currentLoc);
+
+		m_DistanceTravelled += (m_MoveSpeed * DeltaTime) / 100.0f;
+		if (m_NewPlayerHud)
+		{
+			FNumberFormattingOptions tempOption;
+			tempOption.SetMaximumFractionalDigits(1);
+			tempOption.SetMinimumFractionalDigits(1);
+
+			FText newText = FText::Format(
+				FText::FromString(TEXT("DISTANCE : {0}")), 
+				FText::AsNumber(m_DistanceTravelled, &tempOption)
+			);
+			m_NewPlayerHud->SetDistanceText(newText);
+		}
 	}
 	else
 	{
@@ -113,15 +129,15 @@ void AMyCharacter::CharacterDownLeftClick()
 	}
 	m_BulletManager->CheckShootBullet(GetActorLocation(), GetActorForwardVector());
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(
-			-1,                
-			5.0f,              
-			FColor::Green,     
-			TEXT("Click Left Down") 
-		);
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(
+	//		-1,                
+	//		5.0f,              
+	//		FColor::Green,     
+	//		TEXT("Click Left Down") 
+	//	);
+	//}
 }
 
 void AMyCharacter::CharacterUpLeftClick()
@@ -129,15 +145,15 @@ void AMyCharacter::CharacterUpLeftClick()
 	if (!m_IsDownLeftClick) return;
 	m_IsDownLeftClick = false;
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(
-			-1,
-			5.0f,
-			FColor::Green,
-			TEXT("Click Left Up")
-		);
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(
+	//		-1,
+	//		5.0f,
+	//		FColor::Green,
+	//		TEXT("Click Left Up")
+	//	);
+	//}
 }
 
 void AMyCharacter::CharacterDownRightClick()

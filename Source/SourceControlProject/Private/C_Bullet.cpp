@@ -3,6 +3,7 @@
 #include "Components/SceneComponent.h"
 #include "Components/BillboardComponent.h"
 #include "Components/SphereComponent.h"
+#include "C_BulletManager.h"
 
 AC_Bullet::AC_Bullet()
 {
@@ -66,5 +67,11 @@ void AC_Bullet::DeactivateBullet()
 	m_IsActive = false;
 	m_LifeTimeCounter = 0.0f;
 	SetActorLocation(FVector(0.0f, 0.0f, -10000.0f));
+
+	if (m_BulletManager)
+	{
+		++m_BulletManager->m_GotBullet;
+		m_BulletManager->SetBulletText(m_BulletManager->m_GotBullet);
+	}
 }
 
