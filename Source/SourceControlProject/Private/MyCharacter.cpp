@@ -127,7 +127,9 @@ void AMyCharacter::CharacterDownLeftClick()
 	{
 		m_BulletManager = GetGameInstance<UMyGameInstance>()->m_BulletManager;
 	}
-	m_BulletManager->CheckShootBullet(GetActorLocation(), GetActorForwardVector());
+	FVector playerLoc = GetActorLocation();
+	playerLoc.Z += 20.0f;
+	m_BulletManager->CheckShootBullet(playerLoc, GetActorForwardVector());
 
 	//if (GEngine)
 	//{
