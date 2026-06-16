@@ -28,9 +28,9 @@ public:
 	UPROPERTY()
 	bool m_DoOnce = false;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 m_PooledBullet = 10;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 m_GotBullet = 10;
 
 	UPROPERTY(EditAnywhere)

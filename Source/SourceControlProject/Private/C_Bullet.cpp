@@ -27,13 +27,17 @@ void AC_Bullet::BeginPlay()
 
 void AC_Bullet::Tick(float DeltaTime)
 {
-	if (!m_IsActive) return;
+	if (!m_IsActive && !m_IsReloading) return;
 
 	Super::Tick(DeltaTime);
-	m_LifeTimeCounter += DeltaTime;
 	if (m_LifeTimeCounter > m_LifeTime)
 	{
+		//allows bullet to be used again
 		DeactivateBullet();
+	}
+	else
+	{
+		m_LifeTimeCounter += DeltaTime;
 	}
 
 	FVector currentLoc = GetActorLocation();
@@ -43,11 +47,15 @@ void AC_Bullet::Tick(float DeltaTime)
 
 void AC_Bullet::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//if (OtherActor && OtherActor != this)
-	//{
-	//	if (!m_IsActive) return;
-	//	DeactivateBullet();
-	//}
+	if (OtherActor && OtherActor != this)
+	{
+		if (!m_IsActive) return;
+
+		if (OtherActor && OtherActor->ActorHasTag(TEXT("Obstacle")))
+		{
+			RemoveBullet();
+		}
+	}
 }
 
 void AC_Bullet::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -57,6 +65,7 @@ void AC_Bullet::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 void AC_Bullet::ActivateBullet(FVector activeLoc, FVector direction)
 {
 	m_IsActive = true;
+	m_IsReloading = false;
 	m_LifeTimeCounter = 0.0f;
 	SetActorLocation(activeLoc);
 	m_FlyingDirection = direction;
@@ -65,13 +74,20 @@ void AC_Bullet::ActivateBullet(FVector activeLoc, FVector direction)
 void AC_Bullet::DeactivateBullet()
 {
 	m_IsActive = false;
+	m_IsReloading = false;
 	m_LifeTimeCounter = 0.0f;
 	SetActorLocation(FVector(0.0f, 0.0f, -10000.0f));
-
 	if (m_BulletManager)
 	{
 		++m_BulletManager->m_GotBullet;
 		m_BulletManager->SetBulletText(m_BulletManager->m_GotBullet);
 	}
+}
+
+void AC_Bullet::RemoveBullet()
+{
+	m_IsActive = false;
+	m_IsReloading = true;
+	SetActorLocation(FVector(0.0f, 0.0f, -10000.0f));
 }
 

@@ -20,7 +20,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool m_IsActive = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float m_LifeTime = 10.0f;
+	bool m_IsReloading = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_LifeTime = 5.0f;
 	float m_LifeTimeCounter = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_BulletSpeed = 10.0f;
@@ -61,4 +63,6 @@ public:
 	void ActivateBullet(FVector activeLoc, FVector direction);
 	UFUNCTION()
 	void DeactivateBullet();
+	UFUNCTION()
+	void RemoveBullet();
 };

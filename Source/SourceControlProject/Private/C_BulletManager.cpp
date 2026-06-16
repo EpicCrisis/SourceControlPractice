@@ -59,7 +59,7 @@ void AC_BulletManager::CheckShootBullet(FVector shootLoc, FVector playerDirectio
 	AC_Bullet* currentBullet = nullptr;
 	for (int32 i = 0; i < m_BulletList.Num(); ++i)
 	{
-		if (m_BulletList[i] && !m_BulletList[i]->m_IsActive)
+		if (m_BulletList[i] && !m_BulletList[i]->m_IsActive && !m_BulletList[i]->m_IsReloading)
 		{
 			m_BulletList[i]->ActivateBullet(shootLoc, playerDirection);
 			--m_GotBullet;
