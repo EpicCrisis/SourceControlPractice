@@ -4,6 +4,7 @@
 #include "LevelInstance/LevelInstanceComponent.h"
 #include "LevelInstance/LevelInstanceSubsystem.h"
 #include "LevelInstance/LevelInstanceActor.h"
+#include "MyGameStateBase.h"
 
 AC_StreetManager::AC_StreetManager()
 {
@@ -15,6 +16,12 @@ void AC_StreetManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
+	if (m_GameState)
+	{
+		m_GameState->m_StreetManager = this;
+	}
+
 	m_LoadedStreetIndex = 0;
 	if (m_MapRefList.Num() > 0)
 	{

@@ -5,6 +5,8 @@
 #include "Engine/LevelStreamingDynamic.h"
 #include "C_StreetManager.generated.h"
 
+class AMyGameStateBase;
+
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_StreetManager : public AActor
 {
@@ -19,6 +21,9 @@ public:
 	//TArray<AActor*> m_LoadedStreetListB;
 	UPROPERTY()
 	int32 m_LoadedStreetIndex = 0;
+
+	UPROPERTY()
+	AMyGameStateBase* m_GameState = nullptr;
 
 	UPROPERTY()
 	float m_MoveSpeed = 10.0f;

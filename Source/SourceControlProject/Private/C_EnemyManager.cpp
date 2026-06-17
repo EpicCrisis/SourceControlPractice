@@ -3,6 +3,7 @@
 #include "C_Enemy.h"
 #include "MyGameInstance.h"
 #include "MyCharacter.h"
+#include "MyGameStateBase.h"
 
 AC_EnemyManager::AC_EnemyManager()
 {
@@ -50,6 +51,12 @@ void AC_EnemyManager::BeginPlay()
 	Super::BeginPlay();
 
 	m_GameInstance = GetGameInstance<UMyGameInstance>();
+	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
+	if (m_GameState)
+	{
+		m_GameState->m_EnemyManager = this;
+	}
+
 	PoolEnemyList();
 }
 

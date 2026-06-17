@@ -7,6 +7,7 @@
 class UMyGameInstance;
 class AC_Enemy;
 class AMyCharacter;
+class AMyGameStateBase;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_EnemyManager : public AActor
@@ -28,6 +29,9 @@ public:
 	float m_SpawnRadius = 200.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_HeightOffset = 300.0f;
+
+	UPROPERTY()
+	AMyGameStateBase* m_GameState = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AC_Enemy> m_EnemyClass = nullptr;

@@ -12,6 +12,7 @@ class USceneComponent;
 class AC_Wheelchair;
 class UC_FirstHud;
 class UCSecondHud;
+class AMyGameStateBase;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
@@ -28,6 +29,9 @@ public:
 	TSubclassOf<AC_Wheelchair> m_WheelchairClass = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AC_Wheelchair* m_Wheelchair = nullptr;
+	
+	UPROPERTY()
+	AMyGameStateBase* m_GameState = nullptr;
 	
 	//UPROPERTY()
 	//UC_FirstHUD* m_PlayerHUD = nullptr;

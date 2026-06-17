@@ -9,6 +9,7 @@
 #include "C_FirstHud.h"
 #include "CSecondHud.h"
 #include "Components/TextBlock.h"
+#include "MyGameStateBase.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -35,6 +36,12 @@ void AMyCharacter::BeginPlay()
 	m_MyGameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	m_MyGameInstance->m_PlayerChar = this;
 	
+	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
+	if (m_GameState)
+	{
+		m_GameState->m_PlayerChar = this;
+	}
+
 	m_CurrentHealth = m_MaxHealth;
 
 	if (m_WheelchairClass)
