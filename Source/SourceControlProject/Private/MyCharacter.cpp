@@ -10,6 +10,8 @@
 #include "CSecondHud.h"
 #include "Components/TextBlock.h"
 #include "MyGameStateBase.h"
+#include "CMainMenu.h"
+#include "MyPlayerController.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -41,65 +43,110 @@ void AMyCharacter::BeginPlay()
 	{
 		m_GameState->m_PlayerChar = this;
 	}
-
 	m_CurrentHealth = m_MaxHealth;
 
-	if (m_WheelchairClass)
+	switch (m_GameState->m_ThisGameState)
 	{
-		FTransform tempT = FTransform();
-		tempT.SetLocation(GetActorLocation());
-		m_Wheelchair = GetWorld()->SpawnActor<AC_Wheelchair>(m_WheelchairClass, tempT);
-		this->AttachToActor(m_Wheelchair, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		
-		FVector thisLoc = GetActorLocation();
-		thisLoc.Z += 50.0f;
-		SetActorLocation(thisLoc);
-	}
-
-	if (m_SecondHudClass)
+	case E_CurrentGameState::MainMenu:
 	{
-		m_NewPlayerHud = CreateWidget<UCSecondHud>(
-			GetWorld(),
-			m_SecondHudClass
-		);
-		if (m_NewPlayerHud)
+		if (m_GameState->m_MainMenuClass)
 		{
-			m_NewPlayerHud->AddToViewport();
-			m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
+			m_NewMainMenu = CreateWidget<UCMainMenu>(
+				GetWorld(),
+				m_GameState->m_MainMenuClass
+			);
+			if (m_NewMainMenu)
+			{
+				m_NewMainMenu->AddToViewport();
+			}
+			if (m_WheelchairClass)
+			{
+				FTransform tempT = FTransform();
+				tempT.SetLocation(GetActorLocation());
+				m_Wheelchair = GetWorld()->SpawnActor<AC_Wheelchair>(m_WheelchairClass, tempT);
+				this->AttachToActor(m_Wheelchair, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+				FVector thisLoc = GetActorLocation();
+				thisLoc.Z += 50.0f;
+				SetActorLocation(thisLoc);
+			}
+			if (AMyPlayerController* tempController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController()))
+			{
+				//tempController->SetShowMouseCursor(true);
+				tempController->SetMouseCursor();
+				DisableInput(tempController);
+			}
 		}
+		break;
 	}
+	case E_CurrentGameState::Playing:
+	{
+		if (m_SecondHudClass)
+		{
+			m_NewPlayerHud = CreateWidget<UCSecondHud>(
+				GetWorld(),
+				m_SecondHudClass
+			);
+			if (m_NewPlayerHud)
+			{
+				m_NewPlayerHud->AddToViewport();
+				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
+			}
+		}
+		break;
+	}
+	case E_CurrentGameState::GameEnd:
+	{
+		break;
+	}
+	}	
 }
 
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (m_IndexCounter > m_StartDelay)
+	switch (m_GameState->m_ThisGameState)
 	{
-		//FVector currentLoc = GetActorLocation();
-		//currentLoc.Y += m_MoveSpeed * DeltaTime;
-		//SetActorLocation(currentLoc);
-
-		FVector currentLoc = m_Wheelchair->GetActorLocation();
-		currentLoc.Y += m_MoveSpeed * DeltaTime;
-		m_Wheelchair->SetActorLocation(currentLoc);
-
-		m_DistanceTravelled += (m_MoveSpeed * DeltaTime) / 100.0f;
-		if (m_NewPlayerHud)
-		{
-			FNumberFormattingOptions tempOption;
-			tempOption.SetMaximumFractionalDigits(1);
-			tempOption.SetMinimumFractionalDigits(1);
-
-			FText newText = FText::Format(
-				FText::FromString(TEXT("DISTANCE : {0}")), 
-				FText::AsNumber(m_DistanceTravelled, &tempOption)
-			);
-			m_NewPlayerHud->SetDistanceText(newText);
-		}
+	case E_CurrentGameState::MainMenu:
+	{
+		break;
 	}
-	else
+	case E_CurrentGameState::Playing:
 	{
-		m_IndexCounter += DeltaTime;
+		if (m_IndexCounter > m_StartDelay)
+		{
+			//FVector currentLoc = GetActorLocation();
+			//currentLoc.Y += m_MoveSpeed * DeltaTime;
+			//SetActorLocation(currentLoc);
+
+			FVector currentLoc = m_Wheelchair->GetActorLocation();
+			currentLoc.Y += m_MoveSpeed * DeltaTime;
+			m_Wheelchair->SetActorLocation(currentLoc);
+
+			m_DistanceTravelled += (m_MoveSpeed * DeltaTime) / 100.0f;
+			if (m_NewPlayerHud)
+			{
+				FNumberFormattingOptions tempOption;
+				tempOption.SetMaximumFractionalDigits(1);
+				tempOption.SetMinimumFractionalDigits(1);
+
+				FText newText = FText::Format(
+					FText::FromString(TEXT("DISTANCE : {0}")),
+					FText::AsNumber(m_DistanceTravelled, &tempOption)
+				);
+				m_NewPlayerHud->SetDistanceText(newText);
+			}
+		}
+		else
+		{
+			m_IndexCounter += DeltaTime;
+		}
+		break;
+	}
+	case E_CurrentGameState::GameEnd:
+	{
+		break;
+	}
 	}
 }
 

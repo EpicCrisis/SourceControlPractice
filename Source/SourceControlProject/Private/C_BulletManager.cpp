@@ -6,6 +6,7 @@
 #include "CSecondHud.h"
 #include "Components/TextBlock.h"
 #include "MyCharacter.h"
+#include "MyGameStateBase.h"
 
 AC_BulletManager::AC_BulletManager()
 {
@@ -21,6 +22,7 @@ void AC_BulletManager::BeginPlay()
 
 	m_GameInstance = GetGameInstance<UMyGameInstance>();
 	m_GameInstance->m_BulletManager = this;
+	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
 	
 	if (m_BulletClass)
 	{
@@ -47,10 +49,25 @@ void AC_BulletManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!m_DoOnce)
+	switch (m_GameState->m_ThisGameState)
 	{
-		m_DoOnce = true;
-		SetBulletText(m_GotBullet);
+	case E_CurrentGameState::MainMenu:
+	{
+		break;
+	}
+	case E_CurrentGameState::Playing:
+	{
+		if (!m_DoOnce)
+		{
+			m_DoOnce = true;
+			SetBulletText(m_GotBullet);
+		}
+		break;
+	}
+	case E_CurrentGameState::GameEnd:
+	{
+		break;
+	}
 	}
 }
 
@@ -84,6 +101,9 @@ void AC_BulletManager::SetBulletText(int32 numberBullet)
 		FText::FromString(TEXT("BULLET : {0}")),
 		FText::AsNumber(numberBullet)
 	);
-	m_NewPlayerHud->SetBulletText(newText);
+	if (m_NewPlayerHud)
+	{
+		m_NewPlayerHud->SetBulletText(newText);
+	}
 }
 

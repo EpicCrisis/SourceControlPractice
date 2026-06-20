@@ -13,6 +13,8 @@ class AC_Wheelchair;
 class UC_FirstHud;
 class UCSecondHud;
 class AMyGameStateBase;
+class UCMainMenu;
+class UCGameOver;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
@@ -37,7 +39,11 @@ public:
 	//UC_FirstHUD* m_PlayerHUD = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCMainMenu* m_NewMainMenu = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCSecondHud* m_NewPlayerHud = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCGameOver* m_NewGameEnd = nullptr;
 
 	UPROPERTY()
 	float m_DistanceTravelled = 0.0f;

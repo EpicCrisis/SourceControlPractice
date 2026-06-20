@@ -8,6 +8,7 @@ class AC_Bullet;
 class UMyGameInstance;
 class UCSecondHud;
 class AMyCharacter;
+class AMyGameStateBase;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_BulletManager : public AActor
@@ -24,6 +25,9 @@ public:
 	AMyCharacter* m_PlayerCharacter = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCSecondHud* m_NewPlayerHud = nullptr;
+
+	UPROPERTY()
+	AMyGameStateBase* m_GameState = nullptr;
 
 	UPROPERTY()
 	bool m_DoOnce = false;
