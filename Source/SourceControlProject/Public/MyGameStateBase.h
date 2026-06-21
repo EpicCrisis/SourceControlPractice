@@ -53,9 +53,7 @@ public:
 	UCGameOver* m_GameOver = nullptr;
 
 	UFUNCTION()
-	void GetAllRef();
+	void StartGameNow(UCMainMenu* menuToClose);
 	UFUNCTION()
-	void SetupMainMenu();
-	UFUNCTION()
-	void SetupGameOver();
+	void QuitGameNow();
 };

@@ -38,6 +38,11 @@ public:
 	//UPROPERTY()
 	//UC_FirstHUD* m_PlayerHUD = nullptr;
 
+	UPROPERTY()
+	bool m_DoOnce = false;
+	UPROPERTY()
+	bool m_ActivateCursor = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCMainMenu* m_NewMainMenu = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

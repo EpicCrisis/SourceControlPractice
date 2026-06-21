@@ -70,29 +70,30 @@ void AMyCharacter::BeginPlay()
 				thisLoc.Z += 50.0f;
 				SetActorLocation(thisLoc);
 			}
-			if (AMyPlayerController* tempController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController()))
-			{
-				//tempController->SetShowMouseCursor(true);
-				tempController->SetMouseCursor();
-				DisableInput(tempController);
-			}
+			//APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+			//APlayerController* PC = GetOwningPlayer();
+			//APlayerController* PC = Cast<APlayerController>(GetController());
+			//if (AMyPlayerController* tempController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController()))
+			//{
+			//	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
+			//	{
+			//		GEngine->AddOnScreenDebugMessage(
+			//			-1,
+			//			5.f,
+			//			FColor::Green,
+			//			TEXT("PlayerController Found")
+			//		);
+			//	}
+			//
+			//	//tempController->SetShowMouseCursor(true);
+			//	tempController->SetMouseCursor(m_NewMainMenu->TakeWidget());
+			//	DisableInput(tempController);
+			//}
 		}
 		break;
 	}
 	case E_CurrentGameState::Playing:
 	{
-		if (m_SecondHudClass)
-		{
-			m_NewPlayerHud = CreateWidget<UCSecondHud>(
-				GetWorld(),
-				m_SecondHudClass
-			);
-			if (m_NewPlayerHud)
-			{
-				m_NewPlayerHud->AddToViewport();
-				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
-			}
-		}
 		break;
 	}
 	case E_CurrentGameState::GameEnd:
@@ -109,10 +110,45 @@ void AMyCharacter::Tick(float DeltaTime)
 	{
 	case E_CurrentGameState::MainMenu:
 	{
+		if (!m_ActivateCursor)
+		{
+			if (AMyPlayerController* tempController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController()))
+			{
+				if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
+				{
+					GEngine->AddOnScreenDebugMessage(
+						-1,
+						5.f,
+						FColor::Green,
+						TEXT("PlayerController Found")
+					);
+				}
+				tempController->SetMouseCursor(m_NewMainMenu->TakeWidget());
+				DisableInput(tempController);
+				m_ActivateCursor = true;
+			}
+		}
 		break;
 	}
 	case E_CurrentGameState::Playing:
 	{
+		if (!m_DoOnce)
+		{
+			m_DoOnce = true;
+			if (m_SecondHudClass)
+			{
+				m_NewPlayerHud = CreateWidget<UCSecondHud>(
+					GetWorld(),
+					m_SecondHudClass
+				);
+				if (m_NewPlayerHud)
+				{
+					m_NewPlayerHud->AddToViewport();
+					m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
+				}
+			}
+		}
+
 		if (m_IndexCounter > m_StartDelay)
 		{
 			//FVector currentLoc = GetActorLocation();

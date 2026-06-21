@@ -15,4 +15,11 @@ class SOURCECONTROLPROJECT_API UCMainMenu : public UUserWidget
 	UButton* StartButton = nullptr;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* QuitButton = nullptr;
+
+	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnStartButtonClicked();
+	UFUNCTION()
+	void OnQuitButtonClicked();
 };

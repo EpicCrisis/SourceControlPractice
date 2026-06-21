@@ -13,6 +13,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	void SetMouseCursor();
+	void SetMouseCursor(TSharedPtr<SWidget> InWidgetToFocus);
 	void SetGameCursor();
 };
