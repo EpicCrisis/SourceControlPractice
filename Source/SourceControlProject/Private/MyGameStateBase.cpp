@@ -9,20 +9,18 @@
 void AMyGameStateBase::StartGameNow(UCMainMenu* menuToClose)
 {
 	m_MainMenu = menuToClose;
-	m_MainMenu->RemoveFromParent();
+	m_MainMenu->SetVisibility(ESlateVisibility::Collapsed);
 
+	m_IsFirstStart = false;
 	m_ThisGameState = E_CurrentGameState::Playing;
 
 	if (AMyPlayerController* tempController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController()))
 	{
-		//tempController->SetShowMouseCursor(true);
 		tempController->SetGameCursor();
-		m_PlayerChar->EnableInput(tempController);
-
-		if (UGameViewportClient* Viewport = GetWorld()->GetGameViewport())
-		{
-			Viewport->SetMouseCaptureMode(EMouseCaptureMode::CapturePermanently);
-		}
+	}
+	if (m_PlayerChar)
+	{
+		m_PlayerChar->ShowHud();
 	}
 }
 

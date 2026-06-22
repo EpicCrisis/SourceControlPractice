@@ -15,6 +15,7 @@ class UCSecondHud;
 class AMyGameStateBase;
 class UCMainMenu;
 class UCGameOver;
+class AMyPlayerController;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
@@ -39,8 +40,6 @@ public:
 	//UC_FirstHUD* m_PlayerHUD = nullptr;
 
 	UPROPERTY()
-	bool m_DoOnce = false;
-	UPROPERTY()
 	bool m_ActivateCursor = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -49,6 +48,9 @@ public:
 	UCSecondHud* m_NewPlayerHud = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCGameOver* m_NewGameEnd = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AMyPlayerController* m_PlayerController = nullptr;
 
 	UPROPERTY()
 	float m_DistanceTravelled = 0.0f;
@@ -76,6 +78,8 @@ public:
 	bool m_IsDownRightClick = false;
 	//UPROPERTY()
 	//bool m_IsUpRightClick = false;
+	UPROPERTY()
+	bool m_IsDownPKey = false;
 
 	UPROPERTY()
 	UMyGameInstance* m_MyGameInstance = nullptr;
@@ -94,7 +98,11 @@ public:
 	void CharacterUpLeftClick();
 	void CharacterDownRightClick();
 	void CharacterUpRightClick();
+	void DownPause();
+	void UpPause();
 
 	UFUNCTION()
 	void TakePlayerDamage(int32 damage);
+	UFUNCTION()
+	void ShowHud();
 };

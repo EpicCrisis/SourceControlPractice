@@ -27,6 +27,9 @@ class SOURCECONTROLPROJECT_API AMyGameStateBase : public AGameStateBase
 	
 public:
 	UPROPERTY()
+	bool m_IsFirstStart = false;
+
+	UPROPERTY()
 	E_CurrentGameState m_ThisGameState = E_CurrentGameState::MainMenu;
 
 	//check health is zero, check distance travelled

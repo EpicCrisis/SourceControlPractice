@@ -25,7 +25,7 @@ void AC_StreetManager::BeginPlay()
 	m_LoadedStreetIndex = 0;
 	if (m_MapRefList.Num() > 0)
 	{
-		for (int32 i = 0; i < m_MapRefList.Num(); ++i)
+		for (int32 i = 0; i < FMath::Min(3, m_MapRefList.Num()); ++i)
 		{
 			bool successMapSpawn = false;
 			float yOffset = i * 5000.0f;
@@ -40,10 +40,6 @@ void AC_StreetManager::BeginPlay()
 			//m_LoadedStreetList[i]->OnLevelShown.AddDynamic(this, &AC_StreetManager::OnLevelReady);
 			++m_LoadedStreetIndex;
 			//we only spawn the first three streets, then load in new streets as the game progresses
-			if (i == 3)
-			{
-				continue;
-			}
 		}
 	}
 

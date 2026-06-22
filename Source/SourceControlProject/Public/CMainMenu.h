@@ -22,4 +22,9 @@ class SOURCECONTROLPROJECT_API UCMainMenu : public UUserWidget
 	void OnStartButtonClicked();
 	UFUNCTION()
 	void OnQuitButtonClicked();
+
+	//virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
+	//UFUNCTION()
+	//void OnTogglePause();
 };

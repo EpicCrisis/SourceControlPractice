@@ -8,7 +8,7 @@
 void AMyPlayerController::BeginPlay()
 {
 	bShowMouseCursor = false;
-	SetInputMode(FInputModeGameOnly());
+	SetInputMode(FInputModeUIOnly());
 }
 
 void AMyPlayerController::Tick(float DeltaTime)
@@ -17,9 +17,7 @@ void AMyPlayerController::Tick(float DeltaTime)
 
 void AMyPlayerController::SetMouseCursor(TSharedPtr<SWidget> InWidgetToFocus)
 {
-	FInputModeUIOnly InputMode;
-	//InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	//InputMode.SetHideCursorDuringCapture(false);
+	FInputModeGameAndUI InputMode;
 	InputMode.SetWidgetToFocus(InWidgetToFocus);
 	SetInputMode(InputMode);
 	bShowMouseCursor = true;
@@ -30,8 +28,6 @@ void AMyPlayerController::SetMouseCursor(TSharedPtr<SWidget> InWidgetToFocus)
 void AMyPlayerController::SetGameCursor()
 {
 	FInputModeGameOnly InputMode;
-	//InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
-	//InputMode.SetHideCursorDuringCapture(true);
 	SetInputMode(InputMode);
 	bShowMouseCursor = false;
 	bEnableClickEvents = false;

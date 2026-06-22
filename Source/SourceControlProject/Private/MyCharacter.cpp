@@ -42,6 +42,7 @@ void AMyCharacter::BeginPlay()
 	if (m_GameState)
 	{
 		m_GameState->m_PlayerChar = this;
+		m_GameState->m_IsFirstStart = true;
 	}
 	m_CurrentHealth = m_MaxHealth;
 
@@ -59,36 +60,30 @@ void AMyCharacter::BeginPlay()
 			{
 				m_NewMainMenu->AddToViewport();
 			}
-			if (m_WheelchairClass)
-			{
-				FTransform tempT = FTransform();
-				tempT.SetLocation(GetActorLocation());
-				m_Wheelchair = GetWorld()->SpawnActor<AC_Wheelchair>(m_WheelchairClass, tempT);
-				this->AttachToActor(m_Wheelchair, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		}
+		if (m_WheelchairClass)
+		{
+			FTransform tempT = FTransform();
+			tempT.SetLocation(GetActorLocation());
+			m_Wheelchair = GetWorld()->SpawnActor<AC_Wheelchair>(m_WheelchairClass, tempT);
+			this->AttachToActor(m_Wheelchair, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
-				FVector thisLoc = GetActorLocation();
-				thisLoc.Z += 50.0f;
-				SetActorLocation(thisLoc);
+			FVector thisLoc = GetActorLocation();
+			thisLoc.Z += 50.0f;
+			SetActorLocation(thisLoc);
+		}
+		if (m_SecondHudClass)
+		{
+			m_NewPlayerHud = CreateWidget<UCSecondHud>(
+				GetWorld(),
+				m_SecondHudClass
+			);
+			if (m_NewPlayerHud)
+			{
+				m_NewPlayerHud->AddToViewport();
+				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
+				m_NewPlayerHud->SetVisibility(ESlateVisibility::Collapsed);
 			}
-			//APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-			//APlayerController* PC = GetOwningPlayer();
-			//APlayerController* PC = Cast<APlayerController>(GetController());
-			//if (AMyPlayerController* tempController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController()))
-			//{
-			//	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
-			//	{
-			//		GEngine->AddOnScreenDebugMessage(
-			//			-1,
-			//			5.f,
-			//			FColor::Green,
-			//			TEXT("PlayerController Found")
-			//		);
-			//	}
-			//
-			//	//tempController->SetShowMouseCursor(true);
-			//	tempController->SetMouseCursor(m_NewMainMenu->TakeWidget());
-			//	DisableInput(tempController);
-			//}
 		}
 		break;
 	}
@@ -123,8 +118,8 @@ void AMyCharacter::Tick(float DeltaTime)
 						TEXT("PlayerController Found")
 					);
 				}
-				tempController->SetMouseCursor(m_NewMainMenu->TakeWidget());
-				DisableInput(tempController);
+				m_PlayerController = tempController;
+				m_PlayerController->SetMouseCursor(m_NewMainMenu->TakeWidget());
 				m_ActivateCursor = true;
 			}
 		}
@@ -132,23 +127,6 @@ void AMyCharacter::Tick(float DeltaTime)
 	}
 	case E_CurrentGameState::Playing:
 	{
-		if (!m_DoOnce)
-		{
-			m_DoOnce = true;
-			if (m_SecondHudClass)
-			{
-				m_NewPlayerHud = CreateWidget<UCSecondHud>(
-					GetWorld(),
-					m_SecondHudClass
-				);
-				if (m_NewPlayerHud)
-				{
-					m_NewPlayerHud->AddToViewport();
-					m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
-				}
-			}
-		}
-
 		if (m_IndexCounter > m_StartDelay)
 		{
 			//FVector currentLoc = GetActorLocation();
@@ -196,20 +174,25 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("LeftClick", EInputEvent::IE_Released, this, &AMyCharacter::CharacterUpLeftClick);
 	PlayerInputComponent->BindAction("RightClick", EInputEvent::IE_Pressed, this, &AMyCharacter::CharacterDownRightClick);
 	PlayerInputComponent->BindAction("RightClick", EInputEvent::IE_Released, this, &AMyCharacter::CharacterUpRightClick);
+	PlayerInputComponent->BindAction("PKey", EInputEvent::IE_Pressed, this, &AMyCharacter::DownPause);
+	PlayerInputComponent->BindAction("PKey", EInputEvent::IE_Released, this, &AMyCharacter::UpPause);
 }
 
 void AMyCharacter::CharacterTurn(float Value)
 {
+	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
 	AddControllerYawInput(Value);
 }
 
 void AMyCharacter::CharacterLookUp(float Value)
 {
+	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
 	AddControllerPitchInput(Value);
 }
 
 void AMyCharacter::CharacterDownLeftClick()
 {
+	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
 	if (m_IsDownLeftClick) return;
 	m_IsDownLeftClick = true;
 
@@ -234,40 +217,77 @@ void AMyCharacter::CharacterDownLeftClick()
 
 void AMyCharacter::CharacterUpLeftClick()
 {
+	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
 	if (!m_IsDownLeftClick) return;
 	m_IsDownLeftClick = false;
-
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(
-	//		-1,
-	//		5.0f,
-	//		FColor::Green,
-	//		TEXT("Click Left Up")
-	//	);
-	//}
 }
 
 void AMyCharacter::CharacterDownRightClick()
 {
+	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
 	if (m_IsDownRightClick) return;
 	m_IsDownRightClick = true;
 }
 
 void AMyCharacter::CharacterUpRightClick()
 {
+	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
 	if (m_IsDownRightClick) return;
 	m_IsDownRightClick = false;
+}
+
+void AMyCharacter::DownPause()
+{
+	if (m_GameState->m_IsFirstStart) return;
+	if (m_IsDownPKey) return;
+	m_IsDownPKey = true;
+
+	switch (m_GameState->m_ThisGameState)
+	{
+	case E_CurrentGameState::MainMenu: //return to play
+		m_GameState->m_ThisGameState = E_CurrentGameState::Playing;
+				
+		m_NewMainMenu->SetVisibility(ESlateVisibility::Collapsed);
+		m_NewPlayerHud->SetVisibility(ESlateVisibility::Visible);
+		m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
+		
+		m_PlayerController->SetGameCursor();
+		break;
+
+	case E_CurrentGameState::Playing: //open main menu
+		m_GameState->m_ThisGameState = E_CurrentGameState::MainMenu;
+
+		m_NewPlayerHud->SetVisibility(ESlateVisibility::Collapsed);
+		m_NewMainMenu->SetVisibility(ESlateVisibility::Visible);
+
+		m_PlayerController->SetMouseCursor(m_NewMainMenu->TakeWidget());
+		//DisableInput(m_PlayerController);
+		break;
+
+	}
+}
+
+void AMyCharacter::UpPause()
+{
+	if (m_GameState->m_IsFirstStart) return;
+	if (!m_IsDownPKey) return;
+	m_IsDownPKey = false;
 }
 
 void AMyCharacter::TakePlayerDamage(int32 damage)
 {
 	m_CurrentHealth -= damage;
-
 	if (m_NewPlayerHud)
 	{
 		FText newText = FText::Format(FText::FromString(TEXT("HEALTH : {0}")), FText::AsNumber(m_CurrentHealth));
 		m_NewPlayerHud->SetHealthText(newText);
 	}
+}
+
+void AMyCharacter::ShowHud()
+{
+	m_NewMainMenu->SetVisibility(ESlateVisibility::Collapsed);
+	m_NewPlayerHud->SetVisibility(ESlateVisibility::Visible);
+	m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
 }
 

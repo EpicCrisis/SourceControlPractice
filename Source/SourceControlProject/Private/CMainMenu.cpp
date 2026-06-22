@@ -26,3 +26,24 @@ void UCMainMenu::OnQuitButtonClicked()
 		tempGS->QuitGameNow();
 	}
 }
+
+//FReply UCMainMenu::NativeOnKeyDown(
+//	const FGeometry& MyGeometry,
+//	const FKeyEvent& InKeyEvent)
+//{
+//	if (InKeyEvent.GetKey() == EKeys::P)
+//	{
+//		OnTogglePause();
+//		return FReply::Handled();
+//	}
+//
+//	return Super::NativeOnKeyDown(MyGeometry, InKeyEvent);
+//}
+//
+//void UCMainMenu::OnTogglePause()
+//{
+//	if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
+//	{
+//		tempGS->StartGameNow(this);
+//	}
+//}
