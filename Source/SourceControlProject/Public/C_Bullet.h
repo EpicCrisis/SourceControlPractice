@@ -8,6 +8,7 @@ class USceneComponent;
 class UBillboardComponent;
 class USphereComponent;
 class AC_BulletManager;
+class AMyGameStateBase;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AC_Bullet : public AActor
@@ -37,6 +38,8 @@ public:
 	UBillboardComponent* m_BulletBB = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* m_SphereCollider = nullptr;
+	UPROPERTY()
+	AMyGameStateBase* m_GameState = nullptr;
 
 	AC_Bullet();
 

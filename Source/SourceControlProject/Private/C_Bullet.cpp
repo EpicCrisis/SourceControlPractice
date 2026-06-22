@@ -4,6 +4,7 @@
 #include "Components/BillboardComponent.h"
 #include "Components/SphereComponent.h"
 #include "C_BulletManager.h"
+#include "MyGameStateBase.h"
 
 AC_Bullet::AC_Bullet()
 {
@@ -23,26 +24,40 @@ void AC_Bullet::BeginPlay()
 
 	m_SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &AC_Bullet::OnSphereBeginOverlap);
 	m_SphereCollider->OnComponentEndOverlap.AddDynamic(this, &AC_Bullet::OnSphereEndOverlap);
+
+	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
 }
 
 void AC_Bullet::Tick(float DeltaTime)
 {
-	if (!m_IsActive && !m_IsReloading) return;
-
 	Super::Tick(DeltaTime);
-	if (m_LifeTimeCounter > m_LifeTime)
-	{
-		//allows bullet to be used again
-		DeactivateBullet();
-	}
-	else
-	{
-		m_LifeTimeCounter += DeltaTime;
-	}
 
-	FVector currentLoc = GetActorLocation();
-	FVector forwardLoc = currentLoc + m_FlyingDirection * m_BulletSpeed;
-	SetActorLocation(forwardLoc);
+	switch (m_GameState->m_ThisGameState)
+	{
+	case E_CurrentGameState::MainMenu:
+		break;
+	case E_CurrentGameState::Playing:
+
+		if (!m_IsActive && !m_IsReloading) return;
+
+		if (m_LifeTimeCounter > m_LifeTime)
+		{
+			//allows bullet to be used again
+			DeactivateBullet();
+		}
+		else
+		{
+			m_LifeTimeCounter += DeltaTime;
+		}
+
+		FVector currentLoc = GetActorLocation();
+		FVector forwardLoc = currentLoc + m_FlyingDirection * m_BulletSpeed;
+		SetActorLocation(forwardLoc);
+
+		break;
+	case E_CurrentGameState::GameEnd:
+		break;
+	}
 }
 
 void AC_Bullet::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -52,9 +52,7 @@ void AC_BulletManager::Tick(float DeltaTime)
 	switch (m_GameState->m_ThisGameState)
 	{
 	case E_CurrentGameState::MainMenu:
-	{
 		break;
-	}
 	case E_CurrentGameState::Playing:
 	{
 		if (!m_DoOnce)
@@ -65,9 +63,7 @@ void AC_BulletManager::Tick(float DeltaTime)
 		break;
 	}
 	case E_CurrentGameState::GameEnd:
-	{
 		break;
-	}
 	}
 }
 
