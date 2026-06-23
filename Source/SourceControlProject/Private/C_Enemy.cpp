@@ -11,6 +11,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "CSecondHud.h"
 #include "Components/TextBlock.h"
+#include "MyGameStateBase.h"
 
 AC_Enemy::AC_Enemy()
 {
@@ -40,6 +41,8 @@ void AC_Enemy::BeginPlay()
 	{
 		m_KillBB->SetVisibility(false);
 	}
+
+	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
 }
 
 void AC_Enemy::Tick(float DeltaTime)
@@ -51,19 +54,30 @@ void AC_Enemy::Tick(float DeltaTime)
 	
 	Super::Tick(DeltaTime);
 
-	switch (m_EnemyState)
+	switch (m_GameState->m_ThisGameState)
 	{
-	case E_EnemyState::Spawn:
-		HandleSpawn(DeltaTime);
+	case E_CurrentGameState::MainMenu:
 		break;
-	case E_EnemyState::Chase:		
-		//should slowly move until it reaches center of player
-		//deal collide damage to player
-		HandleChase(DeltaTime);
+	case E_CurrentGameState::Playing:
+
+		switch (m_EnemyState)
+		{
+		case E_EnemyState::Spawn:
+			HandleSpawn(DeltaTime);
+			break;
+		case E_EnemyState::Chase:
+			//should slowly move until it reaches center of player
+			//deal collide damage to player
+			HandleChase(DeltaTime);
+			break;
+		case E_EnemyState::Die:
+			//split in half
+			HandleDeath(DeltaTime);
+			break;
+		}
+
 		break;
-	case E_EnemyState::Die:
-		//split in half
-		HandleDeath(DeltaTime);
+	case E_CurrentGameState::GameEnd:
 		break;
 	}
 }

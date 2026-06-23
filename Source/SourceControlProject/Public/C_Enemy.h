@@ -37,6 +37,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCSecondHud* m_NewPlayerHud = nullptr;
 
+	UPROPERTY()
+	AMyGameStateBase* m_GameState = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_SpawnIdleTime = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

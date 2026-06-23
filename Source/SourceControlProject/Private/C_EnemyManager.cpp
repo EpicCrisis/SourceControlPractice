@@ -64,28 +64,37 @@ void AC_EnemyManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!m_CurrentPlayer)
+	switch (m_GameState->m_ThisGameState)
 	{
-		m_CurrentPlayer = m_GameInstance->m_PlayerChar;
-	}
-	if (m_SpawnCounter > m_SpawnInterval)
-	{
-		m_SpawnCounter = 0.0f;
-		FVector nextSpawnLoc = m_CurrentPlayer->GetActorLocation();
-		nextSpawnLoc.Y += m_SpawnDistance;
+	case E_CurrentGameState::MainMenu:
+		break;
+	case E_CurrentGameState::Playing:
+		if (!m_CurrentPlayer)
+		{
+			m_CurrentPlayer = m_GameInstance->m_PlayerChar;
+		}
+		if (m_SpawnCounter > m_SpawnInterval)
+		{
+			m_SpawnCounter = 0.0f;
+			FVector nextSpawnLoc = m_CurrentPlayer->GetActorLocation();
+			nextSpawnLoc.Y += m_SpawnDistance;
 
-		//randomize in the circle
-		float angle = FMath::FRandRange(0.0f, 2.0f * PI);
-		float distance = m_SpawnRadius * FMath::Sqrt(FMath::FRand());
+			//randomize in the circle
+			float angle = FMath::FRandRange(0.0f, 2.0f * PI);
+			float distance = m_SpawnRadius * FMath::Sqrt(FMath::FRand());
 
-		nextSpawnLoc.X += FMath::Cos(angle) * distance;
-		nextSpawnLoc.Z += m_HeightOffset + FMath::Sin(angle) * distance; //make it lift up offset
+			nextSpawnLoc.X += FMath::Cos(angle) * distance;
+			nextSpawnLoc.Z += m_HeightOffset + FMath::Sin(angle) * distance; //make it lift up offset
 
-		SpawnEnemyAt(nextSpawnLoc);
-	}
-	else
-	{
-		m_SpawnCounter += DeltaTime;
-	}
+			SpawnEnemyAt(nextSpawnLoc);
+		}
+		else
+		{
+			m_SpawnCounter += DeltaTime;
+		}
+		break;
+	case E_CurrentGameState::GameEnd:
+		break;
+	}	
 }
 
