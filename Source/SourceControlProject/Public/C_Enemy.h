@@ -12,6 +12,7 @@ class AMyCharacter;
 class UC_Shake;
 class UNiagaraSystem;
 class UCSecondHud;
+class AMyGameStateBase;
 
 UENUM(BlueprintType)
 enum class E_EnemyState : uint8
