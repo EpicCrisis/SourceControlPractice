@@ -31,6 +31,8 @@ public:
 
 	UPROPERTY()
 	E_CurrentGameState m_ThisGameState = E_CurrentGameState::MainMenu;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UWorld> m_RestartLevel = nullptr;
 
 	//check health is zero, check distance travelled
 	UPROPERTY()
@@ -59,4 +61,6 @@ public:
 	void StartGameNow(UCMainMenu* menuToClose);
 	UFUNCTION()
 	void QuitGameNow();
+	UFUNCTION()
+	void RestartMap();
 };

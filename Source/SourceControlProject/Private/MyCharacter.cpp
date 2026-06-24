@@ -12,6 +12,7 @@
 #include "MyGameStateBase.h"
 #include "CMainMenu.h"
 #include "MyPlayerController.h"
+#include "CGameOver.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -61,6 +62,18 @@ void AMyCharacter::BeginPlay()
 				m_NewMainMenu->AddToViewport();
 			}
 		}
+		if (m_GameState->m_GameOverClass)
+		{
+			m_NewGameEnd = CreateWidget<UCGameOver>(
+				GetWorld(),
+				m_GameState->m_GameOverClass
+			);
+			if (m_NewGameEnd)
+			{
+				m_NewGameEnd->AddToViewport();
+				m_NewGameEnd->SetVisibility(ESlateVisibility::Collapsed);
+			}
+		}
 		if (m_WheelchairClass)
 		{
 			FTransform tempT = FTransform();
@@ -83,6 +96,7 @@ void AMyCharacter::BeginPlay()
 				m_NewPlayerHud->AddToViewport();
 				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
 				m_NewPlayerHud->SetVisibility(ESlateVisibility::Collapsed);
+				UpdatePlayerHealth(m_CurrentHealth);
 			}
 		}
 		break;
@@ -279,8 +293,18 @@ void AMyCharacter::TakePlayerDamage(int32 damage)
 	m_CurrentHealth -= damage;
 	if (m_NewPlayerHud)
 	{
-		FText newText = FText::Format(FText::FromString(TEXT("HEALTH : {0}")), FText::AsNumber(m_CurrentHealth));
-		m_NewPlayerHud->SetHealthText(newText);
+		UpdatePlayerHealth(m_CurrentHealth);
+	}
+	if (m_CurrentHealth <= 0)
+	{
+		m_GameState->m_ThisGameState = E_CurrentGameState::GameEnd;
+
+		m_NewPlayerHud->SetVisibility(ESlateVisibility::Collapsed);
+		m_NewGameEnd->SetVisibility(ESlateVisibility::Visible);
+
+		m_NewGameEnd->SetGameOverMessage(false);
+
+		m_PlayerController->SetMouseCursor(m_NewGameEnd->TakeWidget());
 	}
 }
 
@@ -289,5 +313,11 @@ void AMyCharacter::ShowHud()
 	m_NewMainMenu->SetVisibility(ESlateVisibility::Collapsed);
 	m_NewPlayerHud->SetVisibility(ESlateVisibility::Visible);
 	m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void AMyCharacter::UpdatePlayerHealth(int32 health)
+{
+	FText newText = FText::Format(FText::FromString(TEXT("HEALTH : {0}")), FText::AsNumber(health));
+	m_NewPlayerHud->SetHealthText(newText);
 }
 

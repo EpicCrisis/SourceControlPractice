@@ -105,4 +105,6 @@ public:
 	void TakePlayerDamage(int32 damage);
 	UFUNCTION()
 	void ShowHud();
+	UFUNCTION()
+	void UpdatePlayerHealth(int32 health);
 };

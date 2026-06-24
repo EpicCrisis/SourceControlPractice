@@ -186,7 +186,8 @@ void AC_Enemy::HandleChase(float deltaTime)
 	m_AttackLocation = m_PlayerChar->GetActorLocation();
 	m_AttackLocation.Y = GetActorLocation().Y; //don't move forward
 	FVector currentLoc = GetActorLocation();
-	currentLoc = FMath::VInterpConstantTo(currentLoc, m_AttackLocation, deltaTime, 100.0f);
+	//currentLoc = FMath::VInterpConstantTo(currentLoc, m_AttackLocation, deltaTime, 100.0f);
+	currentLoc = FMath::VInterpTo(currentLoc, m_AttackLocation, deltaTime, 0.5f);
 	SetActorLocation(currentLoc);
 }
 

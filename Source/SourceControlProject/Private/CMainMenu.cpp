@@ -2,6 +2,7 @@
 #include "CMainMenu.h"
 #include "Components/Button.h"
 #include "MyGameStateBase.h"
+#include "CGameOver.h"
 
 void UCMainMenu::NativeConstruct()
 {

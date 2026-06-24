@@ -5,6 +5,7 @@
 #include "Engine/GameViewportClient.h"
 #include "MyCharacter.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 void AMyGameStateBase::StartGameNow(UCMainMenu* menuToClose)
 {
@@ -35,4 +36,9 @@ void AMyGameStateBase::QuitGameNow()
 			false
 		);
 	}
+}
+
+void AMyGameStateBase::RestartMap()
+{
+	UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), m_RestartLevel);
 }

@@ -12,6 +12,7 @@ class SOURCECONTROLPROJECT_API UCGameOver : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* RestartButton = nullptr;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
@@ -19,6 +20,13 @@ class SOURCECONTROLPROJECT_API UCGameOver : public UUserWidget
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* WinLoseText = nullptr;
 
+	virtual void NativeConstruct() override;
+
 	UFUNCTION()
-	void SetGameOverMessage(const FText& newMessage);
+	void SetGameOverMessage(bool isWin);
+
+	UFUNCTION()
+	void OnRestartButtonClicked();
+	UFUNCTION()
+	void OnQuitButtonClicked();
 };
