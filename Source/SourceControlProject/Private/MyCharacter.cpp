@@ -164,6 +164,8 @@ void AMyCharacter::Tick(float DeltaTime)
 				);
 				m_NewPlayerHud->SetDistanceText(newText);
 			}
+
+			CheckDistance(m_DistanceTravelled);
 		}
 		else
 		{
@@ -319,5 +321,20 @@ void AMyCharacter::UpdatePlayerHealth(int32 health)
 {
 	FText newText = FText::Format(FText::FromString(TEXT("HEALTH : {0}")), FText::AsNumber(health));
 	m_NewPlayerHud->SetHealthText(newText);
+}
+
+void AMyCharacter::CheckDistance(float distance)
+{
+	if (distance >= m_VictoryDistance)
+	{
+		m_GameState->m_ThisGameState = E_CurrentGameState::GameEnd;
+
+		m_NewPlayerHud->SetVisibility(ESlateVisibility::Collapsed);
+		m_NewGameEnd->SetVisibility(ESlateVisibility::Visible);
+
+		m_NewGameEnd->SetGameOverMessage(true);
+
+		m_PlayerController->SetMouseCursor(m_NewGameEnd->TakeWidget());
+	}
 }
 

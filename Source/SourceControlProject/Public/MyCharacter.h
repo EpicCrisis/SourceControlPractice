@@ -54,6 +54,8 @@ public:
 
 	UPROPERTY()
 	float m_DistanceTravelled = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_VictoryDistance = 10.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UCSecondHud> m_SecondHudClass = nullptr;
@@ -107,4 +109,6 @@ public:
 	void ShowHud();
 	UFUNCTION()
 	void UpdatePlayerHealth(int32 health);
+	UFUNCTION()
+	void CheckDistance(float distance);
 };
