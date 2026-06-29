@@ -15,6 +15,8 @@ class SOURCECONTROLPROJECT_API UCMainMenu : public UUserWidget
 	UButton* StartButton = nullptr;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* QuitButton = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UButton* UpgradeButton = nullptr;
 
 	virtual void NativeConstruct() override;
 
@@ -22,6 +24,8 @@ class SOURCECONTROLPROJECT_API UCMainMenu : public UUserWidget
 	void OnStartButtonClicked();
 	UFUNCTION()
 	void OnQuitButtonClicked();
+	UFUNCTION()
+	void OnUpgradeButtonClicked();
 
 	//virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 

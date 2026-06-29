@@ -10,6 +10,7 @@ void UCMainMenu::NativeConstruct()
 
 	StartButton->OnClicked.AddDynamic(this, &UCMainMenu::OnStartButtonClicked);
 	QuitButton->OnClicked.AddDynamic(this, &UCMainMenu::OnQuitButtonClicked);
+	UpgradeButton->OnClicked.AddDynamic(this, &UCMainMenu::OnUpgradeButtonClicked);
 }
 
 void UCMainMenu::OnStartButtonClicked()
@@ -27,6 +28,12 @@ void UCMainMenu::OnQuitButtonClicked()
 		tempGS->QuitGameNow();
 	}
 }
+
+void UCMainMenu::OnUpgradeButtonClicked()
+{
+
+}
+
 
 //FReply UCMainMenu::NativeOnKeyDown(
 //	const FGeometry& MyGeometry,

@@ -48,6 +48,8 @@ public:
 	TSubclassOf<UCMainMenu> m_MainMenuClass = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UCGameOver> m_GameOverClass = nullptr;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//TSubclassOf<> m_UpgradeClass = nullptr;
 
 	//remove hud and spawn menu
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
