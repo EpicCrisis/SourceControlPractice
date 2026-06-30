@@ -11,5 +11,9 @@ class SOURCECONTROLPROJECT_API UMySaveGame : public USaveGame
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 m_PlayerMoney = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 m_BulletUpgrade = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 m_HealthUpgrade = 0;
 };

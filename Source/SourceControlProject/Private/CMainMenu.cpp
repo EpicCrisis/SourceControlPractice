@@ -3,6 +3,7 @@
 #include "Components/Button.h"
 #include "MyGameStateBase.h"
 #include "CGameOver.h"
+#include "CUpgradeScreen.h"
 
 void UCMainMenu::NativeConstruct()
 {
@@ -31,7 +32,10 @@ void UCMainMenu::OnQuitButtonClicked()
 
 void UCMainMenu::OnUpgradeButtonClicked()
 {
-
+	if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
+	{
+		tempGS->ShowUpgradeScreen();
+	}
 }
 
 

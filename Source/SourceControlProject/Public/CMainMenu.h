@@ -11,6 +11,7 @@ class SOURCECONTROLPROJECT_API UCMainMenu : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* StartButton = nullptr;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))

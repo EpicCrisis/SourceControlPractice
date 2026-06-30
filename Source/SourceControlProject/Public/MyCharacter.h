@@ -16,6 +16,7 @@ class AMyGameStateBase;
 class UCMainMenu;
 class UCGameOver;
 class AMyPlayerController;
+class UCUpgradeScreen;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
@@ -48,6 +49,8 @@ public:
 	UCSecondHud* m_NewPlayerHud = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCGameOver* m_NewGameEnd = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCUpgradeScreen* m_NewUpgrade = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AMyPlayerController* m_PlayerController = nullptr;
@@ -111,4 +114,8 @@ public:
 	void UpdatePlayerHealth(int32 health);
 	UFUNCTION()
 	void CheckDistance(float distance);
+	UFUNCTION()
+	void ShowUpgrade();
+	UFUNCTION()
+	void ShowMenu();
 };

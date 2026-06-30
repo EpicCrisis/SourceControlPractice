@@ -42,3 +42,19 @@ void AMyGameStateBase::RestartMap()
 {
 	UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), m_RestartLevel);
 }
+
+void AMyGameStateBase::ShowUpgradeScreen()
+{
+	if (m_PlayerChar)
+	{
+		m_PlayerChar->ShowUpgrade();
+	}
+}
+
+void AMyGameStateBase::ShowMainScreen()
+{
+	if (m_PlayerChar)
+	{
+		m_PlayerChar->ShowMenu();
+	}
+}

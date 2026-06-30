@@ -9,10 +9,12 @@
 #include "C_FirstHud.h"
 #include "CSecondHud.h"
 #include "Components/TextBlock.h"
+#include "Components/Button.h"
 #include "MyGameStateBase.h"
 #include "CMainMenu.h"
 #include "MyPlayerController.h"
 #include "CGameOver.h"
+#include "CUpgradeScreen.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -72,6 +74,19 @@ void AMyCharacter::BeginPlay()
 			{
 				m_NewGameEnd->AddToViewport();
 				m_NewGameEnd->SetVisibility(ESlateVisibility::Collapsed);
+			}
+		}
+		if (m_GameState->m_UpgradeClass)
+		{
+			m_NewUpgrade = CreateWidget<UCUpgradeScreen>(
+				GetWorld(),
+				m_GameState->m_UpgradeClass
+			);
+			if (m_NewUpgrade)
+			{
+				m_NewUpgrade->AddToViewport();
+				m_NewUpgrade->SetVisibility(ESlateVisibility::Collapsed);
+				m_GameState->m_UpgradeScreen = m_NewUpgrade;
 			}
 		}
 		if (m_WheelchairClass)
@@ -276,6 +291,9 @@ void AMyCharacter::DownPause()
 		m_NewPlayerHud->SetVisibility(ESlateVisibility::Collapsed);
 		m_NewMainMenu->SetVisibility(ESlateVisibility::Visible);
 
+		//cannot upgrade during gameplay
+		m_NewMainMenu->UpgradeButton->SetVisibility(ESlateVisibility::Collapsed);
+
 		m_PlayerController->SetMouseCursor(m_NewMainMenu->TakeWidget());
 		//DisableInput(m_PlayerController);
 		break;
@@ -336,5 +354,17 @@ void AMyCharacter::CheckDistance(float distance)
 
 		m_PlayerController->SetMouseCursor(m_NewGameEnd->TakeWidget());
 	}
+}
+
+void AMyCharacter::ShowUpgrade()
+{
+	m_NewMainMenu->SetVisibility(ESlateVisibility::Collapsed);
+	m_NewUpgrade->SetVisibility(ESlateVisibility::Visible);
+}
+
+void AMyCharacter::ShowMenu()
+{
+	m_NewUpgrade->SetVisibility(ESlateVisibility::Collapsed);
+	m_NewMainMenu->SetVisibility(ESlateVisibility::Visible);
 }
 

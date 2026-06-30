@@ -18,9 +18,19 @@ public:
 	UPROPERTY(EditAnywhere)
 	AMyCharacter* m_PlayerChar = nullptr;
 
+	FString SaveSlotName = TEXT("PlayerUpgradeSave");
+	int32 UserIndex = 0;
+
 	virtual void Init() override;
 	virtual void Shutdown() override;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Game")
-	int32 m_PlayerCoins = 0;
+	int32 m_PlayerMoney = 0;
+	UPROPERTY(BlueprintReadWrite, Category = "Game")
+	int32 m_BulletUpgradeLevel = 0;
+	UPROPERTY(BlueprintReadWrite, Category = "Game")
+	int32 m_HealthUpgradeLevel = 0;
+
+	UFUNCTION()
+	void SaveUpgrade();
 };

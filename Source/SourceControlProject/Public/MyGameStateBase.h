@@ -11,6 +11,7 @@ class UCMainMenu;
 class UCGameOver;
 class AC_EnemyManager;
 class AC_StreetManager;
+class UCUpgradeScreen;
 
 UENUM(BlueprintType)
 enum class E_CurrentGameState : uint8
@@ -43,13 +44,16 @@ public:
 	AC_EnemyManager* m_EnemyManager = nullptr;
 	UPROPERTY()
 	AC_StreetManager* m_StreetManager = nullptr;
+	
+	UPROPERTY()
+	UCUpgradeScreen* m_UpgradeScreen = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UCMainMenu> m_MainMenuClass = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UCGameOver> m_GameOverClass = nullptr;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//TSubclassOf<> m_UpgradeClass = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UCUpgradeScreen> m_UpgradeClass = nullptr;
 
 	//remove hud and spawn menu
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -65,4 +69,8 @@ public:
 	void QuitGameNow();
 	UFUNCTION()
 	void RestartMap();
+	UFUNCTION()
+	void ShowUpgradeScreen();
+	UFUNCTION()
+	void ShowMainScreen();
 };
