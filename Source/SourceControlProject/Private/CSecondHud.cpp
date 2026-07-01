@@ -22,4 +22,10 @@ void UCSecondHud::SetEnemyText(const FText& newMessage)
 	m_EnemyText->SetText(newMessage);
 }
 
+void UCSecondHud::SetMoneyText(int32 money)
+{
+	FText newText = FText::Format(FText::FromString(TEXT("MONEY : {0}")), FText::AsNumber(money));
+	m_MoneyText->SetText(newText);
+}
+
 

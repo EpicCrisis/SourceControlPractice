@@ -13,6 +13,7 @@ class UC_Shake;
 class UNiagaraSystem;
 class UCSecondHud;
 class AMyGameStateBase;
+class UMyGameInstance;
 
 UENUM(BlueprintType)
 enum class E_EnemyState : uint8
@@ -40,6 +41,8 @@ public:
 
 	UPROPERTY()
 	AMyGameStateBase* m_GameState = nullptr;
+	UPROPERTY()
+	UMyGameInstance* m_GameInstance = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_SpawnIdleTime = 1.0f;

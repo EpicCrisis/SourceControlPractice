@@ -42,6 +42,8 @@ void AC_BulletManager::BeginPlay()
 		}
 	}
 
+	//setup stats
+	m_PooledBullet = 3 + m_GameInstance->m_BulletUpgradeLevel;
 	m_GotBullet = m_PooledBullet;
 }
 

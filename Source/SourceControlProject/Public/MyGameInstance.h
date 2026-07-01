@@ -33,4 +33,8 @@ public:
 
 	UFUNCTION()
 	void SaveUpgrade();
+	UFUNCTION()
+	void LoadUpgrade();
+	UFUNCTION()
+	void LoadOrCreateSave();
 };

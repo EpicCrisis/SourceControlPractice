@@ -43,6 +43,7 @@ void AC_Enemy::BeginPlay()
 	}
 
 	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
+	m_GameInstance = GetGameInstance<UMyGameInstance>();
 }
 
 void AC_Enemy::Tick(float DeltaTime)
@@ -90,7 +91,7 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 		if (!m_PlayerChar)
 		{
-			m_PlayerChar = GetGameInstance<UMyGameInstance>()->m_PlayerChar;
+			m_PlayerChar = m_GameInstance->m_PlayerChar;
 		}
 		if (!m_NewPlayerHud)
 		{
@@ -105,6 +106,11 @@ void AC_Enemy::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			{
 				SetEnemyState(E_EnemyState::Die);
 				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
+
+				//get money
+				m_GameInstance->m_PlayerMoney += 2;
+				m_NewPlayerHud->SetMoneyText(m_GameInstance->m_PlayerMoney);
+				m_GameInstance->SaveUpgrade();
 			}
 			else
 			{
@@ -159,7 +165,7 @@ void AC_Enemy::HandleSpawn(float deltaTime)
 {
 	if (!m_PlayerChar)
 	{
-		m_PlayerChar = GetGameInstance<UMyGameInstance>()->m_PlayerChar;
+		m_PlayerChar = m_GameInstance->m_PlayerChar;
 	}
 	//pop in and do nothing for the first 1 second
 	if (m_SpawnCounter > m_SpawnIdleTime)
@@ -181,7 +187,7 @@ void AC_Enemy::HandleChase(float deltaTime)
 {
 	if (!m_PlayerChar)
 	{
-		m_PlayerChar = GetGameInstance<UMyGameInstance>()->m_PlayerChar;
+		m_PlayerChar = m_GameInstance->m_PlayerChar;
 	}
 	m_AttackLocation = m_PlayerChar->GetActorLocation();
 	m_AttackLocation.Y = GetActorLocation().Y; //don't move forward

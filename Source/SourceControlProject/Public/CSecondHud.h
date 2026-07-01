@@ -20,6 +20,8 @@ public:
 	UTextBlock* m_BulletText = nullptr;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* m_EnemyText = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* m_MoneyText = nullptr;
 
 	UFUNCTION(BlueprintCallable)
 	void SetHealthText(const FText& newMessage);
@@ -29,4 +31,6 @@ public:
 	void SetBulletText(const FText& newMessage);
 	UFUNCTION(BlueprintCallable)
 	void SetEnemyText(const FText& newMessage);
+	UFUNCTION(BlueprintCallable)
+	void SetMoneyText(int32 money);
 };

@@ -47,6 +47,9 @@ void AMyCharacter::BeginPlay()
 		m_GameState->m_PlayerChar = this;
 		m_GameState->m_IsFirstStart = true;
 	}
+
+	//setup stats
+	m_MaxHealth = 1 + m_MyGameInstance->m_HealthUpgradeLevel;
 	m_CurrentHealth = m_MaxHealth;
 
 	switch (m_GameState->m_ThisGameState)
@@ -112,6 +115,7 @@ void AMyCharacter::BeginPlay()
 				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
 				m_NewPlayerHud->SetVisibility(ESlateVisibility::Collapsed);
 				UpdatePlayerHealth(m_CurrentHealth);
+				m_NewPlayerHud->SetMoneyText(m_MyGameInstance->m_PlayerMoney);
 			}
 		}
 		break;
@@ -367,4 +371,3 @@ void AMyCharacter::ShowMenu()
 	m_NewUpgrade->SetVisibility(ESlateVisibility::Collapsed);
 	m_NewMainMenu->SetVisibility(ESlateVisibility::Visible);
 }
-
