@@ -6,6 +6,7 @@
 
 class UButton;
 class UTextBlock;
+class UMyGameInstance;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API UCUpgradeScreen : public UUserWidget
@@ -25,6 +26,9 @@ public:
 	UTextBlock* TimesBulletText = nullptr;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* TimesHealthText = nullptr;
+
+	UPROPERTY()
+	UMyGameInstance* m_GameInstance = nullptr;
 
 	virtual void NativeConstruct() override;
 

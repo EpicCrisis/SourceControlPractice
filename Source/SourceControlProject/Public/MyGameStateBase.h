@@ -44,9 +44,6 @@ public:
 	AC_EnemyManager* m_EnemyManager = nullptr;
 	UPROPERTY()
 	AC_StreetManager* m_StreetManager = nullptr;
-	
-	UPROPERTY()
-	UCUpgradeScreen* m_UpgradeScreen = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UCMainMenu> m_MainMenuClass = nullptr;
@@ -62,6 +59,8 @@ public:
 	UCMainMenu* m_MainMenu = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCGameOver* m_GameOver = nullptr;
+	UPROPERTY()
+	UCUpgradeScreen* m_UpgradeScreen = nullptr;
 
 	UFUNCTION()
 	void StartGameNow(UCMainMenu* menuToClose);
@@ -73,4 +72,8 @@ public:
 	void ShowUpgradeScreen();
 	UFUNCTION()
 	void ShowMainScreen();
+	UFUNCTION()
+	void UpgradeBullet();
+	UFUNCTION()
+	void UpgradeHealth();
 };

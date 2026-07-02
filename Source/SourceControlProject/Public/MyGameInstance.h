@@ -31,6 +31,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Game")
 	int32 m_HealthUpgradeLevel = 0;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Game")
+	int32 m_BulletBaseCost = 10;
+	UPROPERTY(BlueprintReadWrite, Category = "Game")
+	int32 m_HealthBaseCost = 10;
+
 	UFUNCTION()
 	void SaveUpgrade();
 	UFUNCTION()

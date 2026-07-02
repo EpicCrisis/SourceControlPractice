@@ -364,6 +364,8 @@ void AMyCharacter::ShowUpgrade()
 {
 	m_NewMainMenu->SetVisibility(ESlateVisibility::Collapsed);
 	m_NewUpgrade->SetVisibility(ESlateVisibility::Visible);
+
+	m_NewUpgrade->CheckPlayerMoney(m_MyGameInstance->m_PlayerMoney);
 }
 
 void AMyCharacter::ShowMenu()

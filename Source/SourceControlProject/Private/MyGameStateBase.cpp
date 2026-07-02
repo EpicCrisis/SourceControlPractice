@@ -6,6 +6,8 @@
 #include "MyCharacter.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "MyGameInstance.h"
+#include "CUpgradeScreen.h"
 
 void AMyGameStateBase::StartGameNow(UCMainMenu* menuToClose)
 {
@@ -56,5 +58,35 @@ void AMyGameStateBase::ShowMainScreen()
 	if (m_PlayerChar)
 	{
 		m_PlayerChar->ShowMenu();
+	}
+}
+
+void AMyGameStateBase::UpgradeBullet()
+{
+	//if (m_GameInstance->m_PlayerMoney >= m_GameInstance->m_BulletBaseCost)
+	{
+		++m_GameInstance->m_BulletUpgradeLevel;
+		m_GameInstance->SaveUpgrade();
+
+		m_UpgradeScreen->CheckPlayerMoney(m_GameInstance->m_PlayerMoney);
+	}
+	//else
+	{
+
+	}
+}
+
+void AMyGameStateBase::UpgradeHealth()
+{
+	//if (m_GameInstance->m_PlayerMoney >= m_GameInstance->m_HealthBaseCost)
+	{
+		++m_GameInstance->m_HealthUpgradeLevel;
+		m_GameInstance->SaveUpgrade();
+
+		m_UpgradeScreen->CheckPlayerMoney(m_GameInstance->m_PlayerMoney);
+	}
+	//else
+	{
+
 	}
 }
