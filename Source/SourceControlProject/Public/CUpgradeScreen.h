@@ -40,4 +40,8 @@ public:
 	void OnMaxBulletUpgradeClicked();
 	UFUNCTION(BlueprintCallable)
 	void OnMaxHealthUpgradeClicked();
+	UFUNCTION()
+	void UpdateTimesBullet(int32 number);
+	UFUNCTION()
+	void UpdateTimesHealth(int32 number);
 };

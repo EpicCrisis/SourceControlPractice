@@ -114,7 +114,7 @@ void AMyCharacter::BeginPlay()
 				m_NewPlayerHud->AddToViewport();
 				m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
 				m_NewPlayerHud->SetVisibility(ESlateVisibility::Collapsed);
-				UpdatePlayerHealth(m_CurrentHealth);
+				m_NewPlayerHud->SetHealthText(m_CurrentHealth);
 				m_NewPlayerHud->SetMoneyText(m_MyGameInstance->m_PlayerMoney);
 			}
 		}
@@ -173,17 +173,8 @@ void AMyCharacter::Tick(float DeltaTime)
 			m_DistanceTravelled += (m_MoveSpeed * DeltaTime) / 100.0f;
 			if (m_NewPlayerHud)
 			{
-				FNumberFormattingOptions tempOption;
-				tempOption.SetMaximumFractionalDigits(1);
-				tempOption.SetMinimumFractionalDigits(1);
-
-				FText newText = FText::Format(
-					FText::FromString(TEXT("DISTANCE : {0}")),
-					FText::AsNumber(m_DistanceTravelled, &tempOption)
-				);
-				m_NewPlayerHud->SetDistanceText(newText);
+				m_NewPlayerHud->SetDistanceText(m_DistanceTravelled);
 			}
-
 			CheckDistance(m_DistanceTravelled);
 		}
 		else
@@ -317,7 +308,7 @@ void AMyCharacter::TakePlayerDamage(int32 damage)
 	m_CurrentHealth -= damage;
 	if (m_NewPlayerHud)
 	{
-		UpdatePlayerHealth(m_CurrentHealth);
+		m_NewPlayerHud->SetHealthText(m_CurrentHealth);
 	}
 	if (m_CurrentHealth <= 0)
 	{
@@ -337,12 +328,6 @@ void AMyCharacter::ShowHud()
 	m_NewMainMenu->SetVisibility(ESlateVisibility::Collapsed);
 	m_NewPlayerHud->SetVisibility(ESlateVisibility::Visible);
 	m_NewPlayerHud->m_EnemyText->SetVisibility(ESlateVisibility::Hidden);
-}
-
-void AMyCharacter::UpdatePlayerHealth(int32 health)
-{
-	FText newText = FText::Format(FText::FromString(TEXT("HEALTH : {0}")), FText::AsNumber(health));
-	m_NewPlayerHud->SetHealthText(newText);
 }
 
 void AMyCharacter::CheckDistance(float distance)
@@ -366,6 +351,8 @@ void AMyCharacter::ShowUpgrade()
 	m_NewUpgrade->SetVisibility(ESlateVisibility::Visible);
 
 	m_NewUpgrade->CheckPlayerMoney(m_MyGameInstance->m_PlayerMoney);
+	m_NewUpgrade->UpdateTimesBullet(m_MyGameInstance->m_BulletUpgradeLevel);
+	m_NewUpgrade->UpdateTimesHealth(m_MyGameInstance->m_HealthUpgradeLevel);
 }
 
 void AMyCharacter::ShowMenu()

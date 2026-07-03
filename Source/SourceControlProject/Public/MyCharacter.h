@@ -111,8 +111,6 @@ public:
 	UFUNCTION()
 	void ShowHud();
 	UFUNCTION()
-	void UpdatePlayerHealth(int32 health);
-	UFUNCTION()
 	void CheckDistance(float distance);
 	UFUNCTION()
 	void ShowUpgrade();

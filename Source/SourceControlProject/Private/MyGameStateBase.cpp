@@ -17,6 +17,8 @@ void AMyGameStateBase::StartGameNow(UCMainMenu* menuToClose)
 	m_IsFirstStart = false;
 	m_ThisGameState = E_CurrentGameState::Playing;
 
+	m_GameInstance = GetGameInstance<UMyGameInstance>();
+
 	if (AMyPlayerController* tempController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController()))
 	{
 		tempController->SetGameCursor();
@@ -49,6 +51,7 @@ void AMyGameStateBase::ShowUpgradeScreen()
 {
 	if (m_PlayerChar)
 	{
+		m_GameInstance = GetGameInstance<UMyGameInstance>();
 		m_PlayerChar->ShowUpgrade();
 	}
 }
@@ -63,14 +66,16 @@ void AMyGameStateBase::ShowMainScreen()
 
 void AMyGameStateBase::UpgradeBullet()
 {
-	//if (m_GameInstance->m_PlayerMoney >= m_GameInstance->m_BulletBaseCost)
+	if (m_GameInstance->m_PlayerMoney >= m_GameInstance->m_BulletBaseCost)
 	{
+		m_GameInstance->m_PlayerMoney -= m_GameInstance->m_BulletBaseCost;
 		++m_GameInstance->m_BulletUpgradeLevel;
 		m_GameInstance->SaveUpgrade();
 
+		m_UpgradeScreen->UpdateTimesBullet(m_GameInstance->m_BulletUpgradeLevel);
 		m_UpgradeScreen->CheckPlayerMoney(m_GameInstance->m_PlayerMoney);
 	}
-	//else
+	else
 	{
 
 	}
@@ -78,14 +83,16 @@ void AMyGameStateBase::UpgradeBullet()
 
 void AMyGameStateBase::UpgradeHealth()
 {
-	//if (m_GameInstance->m_PlayerMoney >= m_GameInstance->m_HealthBaseCost)
+	if (m_GameInstance->m_PlayerMoney >= m_GameInstance->m_HealthBaseCost)
 	{
+		m_GameInstance->m_PlayerMoney -= m_GameInstance->m_HealthBaseCost;
 		++m_GameInstance->m_HealthUpgradeLevel;
 		m_GameInstance->SaveUpgrade();
 
+		m_UpgradeScreen->UpdateTimesHealth(m_GameInstance->m_HealthUpgradeLevel);
 		m_UpgradeScreen->CheckPlayerMoney(m_GameInstance->m_PlayerMoney);
 	}
-	//else
+	else
 	{
 
 	}

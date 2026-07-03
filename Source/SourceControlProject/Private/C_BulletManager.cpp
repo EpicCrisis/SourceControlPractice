@@ -95,13 +95,9 @@ void AC_BulletManager::SetBulletText(int32 numberBullet)
 			m_NewPlayerHud = m_PlayerCharacter->m_NewPlayerHud;
 		}
 	}
-	FText newText = FText::Format(
-		FText::FromString(TEXT("BULLET : {0}")),
-		FText::AsNumber(numberBullet)
-	);
 	if (m_NewPlayerHud)
 	{
-		m_NewPlayerHud->SetBulletText(newText);
+		m_NewPlayerHud->SetBulletText(numberBullet);
 	}
 }
 

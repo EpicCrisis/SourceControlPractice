@@ -24,13 +24,13 @@ public:
 	UTextBlock* m_MoneyText = nullptr;
 
 	UFUNCTION(BlueprintCallable)
-	void SetHealthText(const FText& newMessage);
+	void SetHealthText(int32 health);
 	UFUNCTION(BlueprintCallable)
-	void SetDistanceText(const FText& newMessage);
+	void SetDistanceText(float distance);
 	UFUNCTION(BlueprintCallable)
-	void SetBulletText(const FText& newMessage);
+	void SetBulletText(int32 bullet);
 	UFUNCTION(BlueprintCallable)
-	void SetEnemyText(const FText& newMessage);
+	void SetEnemyText(int32 enemy);
 	UFUNCTION(BlueprintCallable)
 	void SetMoneyText(int32 money);
 };

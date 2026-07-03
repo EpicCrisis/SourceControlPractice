@@ -8,6 +8,8 @@
 void UCUpgradeScreen::NativeConstruct()
 {
 	ReturnButton->OnClicked.AddDynamic(this, &UCUpgradeScreen::OnReturnButtonClicked);
+	MaxBulletUpgradeButton->OnClicked.AddDynamic(this, &UCUpgradeScreen::OnMaxBulletUpgradeClicked);
+	MaxHealthUpgradeButton->OnClicked.AddDynamic(this, &UCUpgradeScreen::OnMaxHealthUpgradeClicked);
 }
 
 void UCUpgradeScreen::CheckPlayerMoney(int32 playerMoney)
@@ -20,9 +22,15 @@ void UCUpgradeScreen::CheckPlayerMoney(int32 playerMoney)
 
 void UCUpgradeScreen::OnReturnButtonClicked()
 {
+	//if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
+	//{
+	//	tempGS->ShowMainScreen();
+	//}
+
+	//respawn everything
 	if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
 	{
-		tempGS->ShowMainScreen();
+		tempGS->RestartMap();
 	}
 }
 
@@ -40,4 +48,16 @@ void UCUpgradeScreen::OnMaxHealthUpgradeClicked()
 	{
 		tempGS->UpgradeHealth();
 	}
+}
+
+void UCUpgradeScreen::UpdateTimesBullet(int32 number)
+{
+	FText newText = FText::Format(FText::FromString(TEXT("x{0}")), FText::AsNumber(number));
+	TimesBulletText->SetText(newText);
+}
+
+void UCUpgradeScreen::UpdateTimesHealth(int32 number)
+{
+	FText newText = FText::Format(FText::FromString(TEXT("x{0}")), FText::AsNumber(number));
+	TimesHealthText->SetText(newText);
 }
