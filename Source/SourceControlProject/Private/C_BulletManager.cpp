@@ -23,7 +23,10 @@ void AC_BulletManager::BeginPlay()
 	m_GameInstance = GetGameInstance<UMyGameInstance>();
 	m_GameInstance->m_BulletManager = this;
 	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
-	
+
+	//setup stats
+	m_PooledBullet = 3 + m_GameInstance->m_BulletUpgradeLevel;
+
 	if (m_BulletClass)
 	{
 		for (int32 i = 0; i < m_PooledBullet; ++i)
@@ -43,7 +46,6 @@ void AC_BulletManager::BeginPlay()
 	}
 
 	//setup stats
-	m_PooledBullet = 3 + m_GameInstance->m_BulletUpgradeLevel;
 	m_GotBullet = m_PooledBullet;
 }
 
