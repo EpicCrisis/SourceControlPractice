@@ -12,6 +12,7 @@ class UCGameOver;
 class AC_EnemyManager;
 class AC_StreetManager;
 class UCUpgradeScreen;
+class AC_BulletManager;
 
 UENUM(BlueprintType)
 enum class E_CurrentGameState : uint8
