@@ -36,7 +36,7 @@ void UCSecondHud::SetEnemyText(int32 enemy)
 
 void UCSecondHud::SetMoneyText(int32 money)
 {
-	FText newText = FText::Format(FText::FromString(TEXT("MONEY : {0}")), FText::AsNumber(money));
+	FText newText = FText::Format(FText::FromString(TEXT("MONEY : ${0}")), FText::AsNumber(money));
 	m_MoneyText->SetText(newText);
 }
 

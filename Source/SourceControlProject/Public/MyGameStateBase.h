@@ -44,6 +44,8 @@ public:
 	AC_EnemyManager* m_EnemyManager = nullptr;
 	UPROPERTY()
 	AC_StreetManager* m_StreetManager = nullptr;
+	UPROPERTY()
+	AC_BulletManager* m_BulletManager = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UCMainMenu> m_MainMenuClass = nullptr;

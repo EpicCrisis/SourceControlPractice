@@ -66,6 +66,13 @@ public:
 	//UUserWidget* m_PlayerHud = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_AccelerationRate = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_CurrentAcceleration = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_CurrentVelocity = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_StartDelay = 2.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_MoveSpeed = 100.0f;
@@ -96,6 +103,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void UpdateHealthStats();
 
 	void CharacterTurn(float Value);
 	void CharacterLookUp(float Value);

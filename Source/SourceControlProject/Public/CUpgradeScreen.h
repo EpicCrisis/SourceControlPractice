@@ -26,6 +26,10 @@ public:
 	UTextBlock* TimesBulletText = nullptr;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* TimesHealthText = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* MaxBulletCost = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UTextBlock* MaxHealthCost = nullptr;
 
 	UPROPERTY()
 	UMyGameInstance* m_GameInstance = nullptr;
@@ -34,6 +38,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void CheckPlayerMoney(int32 playerMoney);
+	UFUNCTION(BlueprintCallable)
+	void UpdateMaxHealthCost(int32 newCost);
+	UFUNCTION(BlueprintCallable)
+	void UpdateMaxBulletCost(int32 newCost);
 	UFUNCTION(BlueprintCallable)
 	void OnReturnButtonClicked();
 	UFUNCTION(BlueprintCallable)

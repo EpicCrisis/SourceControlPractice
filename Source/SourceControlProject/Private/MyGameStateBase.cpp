@@ -61,6 +61,8 @@ void AMyGameStateBase::ShowMainScreen()
 	if (m_PlayerChar)
 	{
 		m_PlayerChar->ShowMenu();
+		m_PlayerChar->UpdateHealthStats();
+		//m_BulletManager->UpdatePooledBullets();
 	}
 }
 
@@ -72,7 +74,10 @@ void AMyGameStateBase::UpgradeBullet()
 		++m_GameInstance->m_BulletUpgradeLevel;
 		m_GameInstance->SaveUpgrade();
 
+		m_GameInstance->m_BulletBaseCost = 100 + m_GameInstance->m_BulletUpgradeLevel * 100;
+
 		m_UpgradeScreen->UpdateTimesBullet(m_GameInstance->m_BulletUpgradeLevel);
+		m_UpgradeScreen->UpdateMaxBulletCost(m_GameInstance->m_BulletBaseCost);
 		m_UpgradeScreen->CheckPlayerMoney(m_GameInstance->m_PlayerMoney);
 	}
 	else
@@ -89,7 +94,10 @@ void AMyGameStateBase::UpgradeHealth()
 		++m_GameInstance->m_HealthUpgradeLevel;
 		m_GameInstance->SaveUpgrade();
 
+		m_GameInstance->m_HealthBaseCost = 100 + m_GameInstance->m_HealthUpgradeLevel * 100;
+
 		m_UpgradeScreen->UpdateTimesHealth(m_GameInstance->m_HealthUpgradeLevel);
+		m_UpgradeScreen->UpdateMaxHealthCost(m_GameInstance->m_HealthBaseCost);
 		m_UpgradeScreen->CheckPlayerMoney(m_GameInstance->m_PlayerMoney);
 	}
 	else

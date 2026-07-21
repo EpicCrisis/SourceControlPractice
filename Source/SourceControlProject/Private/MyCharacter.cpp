@@ -166,6 +166,27 @@ void AMyCharacter::Tick(float DeltaTime)
 			//currentLoc.Y += m_MoveSpeed * DeltaTime;
 			//SetActorLocation(currentLoc);
 
+			m_CurrentAcceleration += m_AccelerationRate * DeltaTime;
+			if (m_CurrentAcceleration >= 100.0f)
+			{
+				m_CurrentAcceleration = 100.0f;
+			}
+			else if (m_CurrentAcceleration <= -100.0f)
+			{
+				m_CurrentAcceleration = -100.0f;
+			}
+
+			m_CurrentVelocity += m_CurrentAcceleration * DeltaTime;
+			if (m_CurrentVelocity >= 100.0f)
+			{
+				m_CurrentVelocity = 100.0f;
+			}
+			else if (m_CurrentVelocity <= 0.0f)
+			{
+				m_CurrentVelocity = 0.0f;
+			}
+			m_MoveSpeed = m_CurrentVelocity;
+
 			FVector currentLoc = m_Wheelchair->GetActorLocation();
 			currentLoc.Y += m_MoveSpeed * DeltaTime;
 			m_Wheelchair->SetActorLocation(currentLoc);
@@ -202,6 +223,19 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("RightClick", EInputEvent::IE_Released, this, &AMyCharacter::CharacterUpRightClick);
 	PlayerInputComponent->BindAction("PKey", EInputEvent::IE_Pressed, this, &AMyCharacter::DownPause);
 	PlayerInputComponent->BindAction("PKey", EInputEvent::IE_Released, this, &AMyCharacter::UpPause);
+}
+
+void AMyCharacter::UpdateHealthStats()
+{
+	//setup stats
+	m_MaxHealth = 1 + m_MyGameInstance->m_HealthUpgradeLevel;
+	m_CurrentHealth = m_MaxHealth;
+
+	if (m_NewPlayerHud)
+	{
+		m_NewPlayerHud->SetHealthText(m_CurrentHealth);
+		m_NewPlayerHud->SetMoneyText(m_MyGameInstance->m_PlayerMoney);
+	}
 }
 
 void AMyCharacter::CharacterTurn(float Value)
@@ -306,6 +340,10 @@ void AMyCharacter::UpPause()
 void AMyCharacter::TakePlayerDamage(int32 damage)
 {
 	m_CurrentHealth -= damage;
+
+	m_CurrentAcceleration *= 0.5f;
+	m_CurrentVelocity *= 0.5f;
+
 	if (m_NewPlayerHud)
 	{
 		m_NewPlayerHud->SetHealthText(m_CurrentHealth);
@@ -353,6 +391,9 @@ void AMyCharacter::ShowUpgrade()
 	m_NewUpgrade->CheckPlayerMoney(m_MyGameInstance->m_PlayerMoney);
 	m_NewUpgrade->UpdateTimesBullet(m_MyGameInstance->m_BulletUpgradeLevel);
 	m_NewUpgrade->UpdateTimesHealth(m_MyGameInstance->m_HealthUpgradeLevel);
+
+	m_NewUpgrade->UpdateMaxBulletCost(m_MyGameInstance->m_BulletBaseCost);
+	m_NewUpgrade->UpdateMaxHealthCost(m_MyGameInstance->m_HealthBaseCost);
 }
 
 void AMyCharacter::ShowMenu()

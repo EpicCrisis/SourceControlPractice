@@ -12,6 +12,7 @@ void UCMainMenu::NativeConstruct()
 	StartButton->OnClicked.AddDynamic(this, &UCMainMenu::OnStartButtonClicked);
 	QuitButton->OnClicked.AddDynamic(this, &UCMainMenu::OnQuitButtonClicked);
 	UpgradeButton->OnClicked.AddDynamic(this, &UCMainMenu::OnUpgradeButtonClicked);
+	ExtraButton->OnClicked.AddDynamic(this, &UCMainMenu::OnExtraButtonClicked);
 }
 
 void UCMainMenu::OnStartButtonClicked()
@@ -35,6 +36,14 @@ void UCMainMenu::OnUpgradeButtonClicked()
 	if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
 	{
 		tempGS->ShowUpgradeScreen();
+	}
+}
+
+void UCMainMenu::OnExtraButtonClicked()
+{
+	if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
+	{
+		//tempGS->ShowExtraScreen();
 	}
 }
 

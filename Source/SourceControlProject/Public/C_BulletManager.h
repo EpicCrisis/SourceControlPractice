@@ -47,6 +47,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	void UpdatePooledBullets();
+
 	void CheckShootBullet(FVector shootLoc, FVector playerDirection);
 	void SetBulletText(int32 numberBullet);
 };

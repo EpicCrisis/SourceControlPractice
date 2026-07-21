@@ -18,6 +18,8 @@ public:
 	UButton* QuitButton = nullptr;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* UpgradeButton = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UButton* ExtraButton = nullptr;
 
 	virtual void NativeConstruct() override;
 
@@ -27,6 +29,8 @@ public:
 	void OnQuitButtonClicked();
 	UFUNCTION()
 	void OnUpgradeButtonClicked();
+	UFUNCTION()
+	void OnExtraButtonClicked();
 
 	//virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 

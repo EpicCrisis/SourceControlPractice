@@ -23,9 +23,11 @@ void AC_BulletManager::BeginPlay()
 	m_GameInstance = GetGameInstance<UMyGameInstance>();
 	m_GameInstance->m_BulletManager = this;
 	m_GameState = GetWorld()->GetGameState<AMyGameStateBase>();
+	m_GameState->m_BulletManager = this;
 
 	//setup stats
 	m_PooledBullet = 3 + m_GameInstance->m_BulletUpgradeLevel;
+	m_GotBullet = m_PooledBullet;
 
 	if (m_BulletClass)
 	{
@@ -44,9 +46,6 @@ void AC_BulletManager::BeginPlay()
 			m_BulletList.Add(newBullet);
 		}
 	}
-
-	//setup stats
-	m_GotBullet = m_PooledBullet;
 }
 
 void AC_BulletManager::Tick(float DeltaTime)
@@ -68,6 +67,34 @@ void AC_BulletManager::Tick(float DeltaTime)
 	}
 	case E_CurrentGameState::GameEnd:
 		break;
+	}
+}
+
+void AC_BulletManager::UpdatePooledBullets()
+{
+	//setup stats
+	m_PooledBullet = 3 + m_GameInstance->m_BulletUpgradeLevel;
+	m_GotBullet = m_PooledBullet;
+
+	for (int32 i = m_BulletList.Num() - 1; i > 0; --i)
+	{
+		//delete old bullets
+		m_BulletList[i]->Destroy();
+		m_BulletList.RemoveAt(i);
+	}
+
+	if (m_BulletClass)
+	{
+		for (int32 i = 0; i < m_PooledBullet; ++i)
+		{
+			AC_Bullet* newBullet = GetWorld()->SpawnActor<AC_Bullet>
+				(
+					m_BulletClass,
+					GetActorTransform()
+				);
+			newBullet->m_BulletManager = this;
+			m_BulletList.Add(newBullet);
+		}
 	}
 }
 

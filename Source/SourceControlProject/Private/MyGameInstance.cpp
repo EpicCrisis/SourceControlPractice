@@ -47,6 +47,9 @@ void UMyGameInstance::LoadUpgrade()
 			m_PlayerMoney = SaveGame->m_PlayerMoney;
 			m_BulletUpgradeLevel = SaveGame->m_BulletUpgrade;
 			m_HealthUpgradeLevel = SaveGame->m_HealthUpgrade;
+
+			m_BulletBaseCost = 100 + m_BulletUpgradeLevel * 100;
+			m_HealthBaseCost = 100 + m_HealthUpgradeLevel * 100;
 		}
 	}
 }
@@ -62,9 +65,12 @@ void UMyGameInstance::LoadOrCreateSave()
 	}
 	else
 	{
-		m_PlayerMoney = 10;
+		m_PlayerMoney = 100;
 		m_BulletUpgradeLevel = 0;
 		m_HealthUpgradeLevel = 0;
+
+		m_BulletBaseCost = 100 + m_BulletUpgradeLevel * 100;
+		m_HealthBaseCost = 100 + m_HealthUpgradeLevel * 100;
 		
 		SaveUpgrade();
 	}

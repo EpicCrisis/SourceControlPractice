@@ -16,8 +16,20 @@ void UCUpgradeScreen::CheckPlayerMoney(int32 playerMoney)
 {
 	//m_GameInstance = GetGameInstance<UMyGameInstance>();
 
-	FText newText = FText::Format(FText::FromString(TEXT("MONEY : {0}")), FText::AsNumber(playerMoney));
+	FText newText = FText::Format(FText::FromString(TEXT("${0}")), FText::AsNumber(playerMoney));
 	PlayerMoneyText->SetText(newText);
+}
+
+void UCUpgradeScreen::UpdateMaxHealthCost(int32 newCost)
+{
+	FText newText = FText::Format(FText::FromString(TEXT("${0}")), FText::AsNumber(newCost));
+	MaxHealthCost->SetText(newText);
+}
+
+void UCUpgradeScreen::UpdateMaxBulletCost(int32 newCost)
+{
+	FText newText = FText::Format(FText::FromString(TEXT("${0}")), FText::AsNumber(newCost));
+	MaxBulletCost->SetText(newText);
 }
 
 void UCUpgradeScreen::OnReturnButtonClicked()
