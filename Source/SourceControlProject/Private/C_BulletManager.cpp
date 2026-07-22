@@ -72,11 +72,13 @@ void AC_BulletManager::Tick(float DeltaTime)
 
 void AC_BulletManager::UpdatePooledBullets()
 {
+	if (m_BulletList.Num() == 3 + m_GameInstance->m_BulletUpgradeLevel) return;
+
 	//setup stats
 	m_PooledBullet = 3 + m_GameInstance->m_BulletUpgradeLevel;
 	m_GotBullet = m_PooledBullet;
 
-	for (int32 i = m_BulletList.Num() - 1; i > 0; --i)
+	for (int32 i = m_BulletList.Num() - 1; i >= 0; --i)
 	{
 		//delete old bullets
 		m_BulletList[i]->Destroy();

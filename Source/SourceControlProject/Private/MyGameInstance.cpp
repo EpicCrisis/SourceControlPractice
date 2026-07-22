@@ -65,7 +65,7 @@ void UMyGameInstance::LoadOrCreateSave()
 	}
 	else
 	{
-		m_PlayerMoney = 100;
+		m_PlayerMoney = 10000;
 		m_BulletUpgradeLevel = 0;
 		m_HealthUpgradeLevel = 0;
 

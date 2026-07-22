@@ -43,7 +43,7 @@ void UCMainMenu::OnExtraButtonClicked()
 {
 	if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
 	{
-		//tempGS->ShowExtraScreen();
+		tempGS->ShowExtraPage();
 	}
 }
 

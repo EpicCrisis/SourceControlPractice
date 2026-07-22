@@ -34,16 +34,16 @@ void UCUpgradeScreen::UpdateMaxBulletCost(int32 newCost)
 
 void UCUpgradeScreen::OnReturnButtonClicked()
 {
-	//if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
-	//{
-	//	tempGS->ShowMainScreen();
-	//}
-
-	//respawn everything
 	if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
 	{
-		tempGS->RestartMap();
+		tempGS->ShowMainScreen();
 	}
+
+	//respawn everything
+	//if (AMyGameStateBase* tempGS = GetWorld()->GetGameState<AMyGameStateBase>())
+	//{
+	//	tempGS->RestartMap();
+	//}
 }
 
 void UCUpgradeScreen::OnMaxBulletUpgradeClicked()

@@ -8,6 +8,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "MyGameInstance.h"
 #include "CUpgradeScreen.h"
+#include "C_BulletManager.h"
+#include "CExtraPage.h"
 
 void AMyGameStateBase::StartGameNow(UCMainMenu* menuToClose)
 {
@@ -62,7 +64,7 @@ void AMyGameStateBase::ShowMainScreen()
 	{
 		m_PlayerChar->ShowMenu();
 		m_PlayerChar->UpdateHealthStats();
-		//m_BulletManager->UpdatePooledBullets();
+		m_BulletManager->UpdatePooledBullets();
 	}
 }
 
@@ -103,5 +105,21 @@ void AMyGameStateBase::UpgradeHealth()
 	else
 	{
 
+	}
+}
+
+void AMyGameStateBase::AddMoreMoney(int32 amount)
+{
+	m_GameInstance->m_PlayerMoney += amount;
+	m_GameInstance->SaveUpgrade();
+	m_ExtraPage->CheckPlayerMoney(m_GameInstance->m_PlayerMoney);
+}
+
+void AMyGameStateBase::ShowExtraPage()
+{
+	if (m_PlayerChar)
+	{
+		m_GameInstance = GetGameInstance<UMyGameInstance>();
+		m_PlayerChar->ShowExtraPage();
 	}
 }

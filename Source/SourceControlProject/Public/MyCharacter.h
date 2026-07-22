@@ -17,6 +17,7 @@ class UCMainMenu;
 class UCGameOver;
 class AMyPlayerController;
 class UCUpgradeScreen;
+class UCExtraPage;
 
 UCLASS()
 class SOURCECONTROLPROJECT_API AMyCharacter : public ACharacter
@@ -51,6 +52,8 @@ public:
 	UCGameOver* m_NewGameEnd = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCUpgradeScreen* m_NewUpgrade = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCExtraPage* m_ExtraPage = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AMyPlayerController* m_PlayerController = nullptr;
@@ -125,4 +128,6 @@ public:
 	void ShowUpgrade();
 	UFUNCTION()
 	void ShowMenu();
+	UFUNCTION()
+	void ShowExtraPage();
 };

@@ -15,6 +15,7 @@
 #include "MyPlayerController.h"
 #include "CGameOver.h"
 #include "CUpgradeScreen.h"
+#include "CExtraPage.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -90,6 +91,19 @@ void AMyCharacter::BeginPlay()
 				m_NewUpgrade->AddToViewport();
 				m_NewUpgrade->SetVisibility(ESlateVisibility::Collapsed);
 				m_GameState->m_UpgradeScreen = m_NewUpgrade;
+			}
+		}
+		if (m_GameState->m_ExtraClass)
+		{
+			m_ExtraPage = CreateWidget<UCExtraPage>(
+				GetWorld(),
+				m_GameState->m_ExtraClass
+			);
+			if (m_ExtraPage)
+			{
+				m_ExtraPage->AddToViewport();
+				m_ExtraPage->SetVisibility(ESlateVisibility::Collapsed);
+				m_GameState->m_ExtraPage = m_ExtraPage;
 			}
 		}
 		if (m_WheelchairClass)
@@ -322,6 +336,7 @@ void AMyCharacter::DownPause()
 
 		//cannot upgrade during gameplay
 		m_NewMainMenu->UpgradeButton->SetVisibility(ESlateVisibility::Collapsed);
+		m_NewMainMenu->ExtraButton->SetVisibility(ESlateVisibility::Collapsed);
 
 		m_PlayerController->SetMouseCursor(m_NewMainMenu->TakeWidget());
 		//DisableInput(m_PlayerController);
@@ -399,5 +414,13 @@ void AMyCharacter::ShowUpgrade()
 void AMyCharacter::ShowMenu()
 {
 	m_NewUpgrade->SetVisibility(ESlateVisibility::Collapsed);
+	m_ExtraPage->SetVisibility(ESlateVisibility::Collapsed);
 	m_NewMainMenu->SetVisibility(ESlateVisibility::Visible);
+}
+
+void AMyCharacter::ShowExtraPage()
+{
+	m_NewMainMenu->SetVisibility(ESlateVisibility::Collapsed);
+	m_ExtraPage->SetVisibility(ESlateVisibility::Visible);
+	m_ExtraPage->CheckPlayerMoney(m_MyGameInstance->m_PlayerMoney);
 }
