@@ -211,6 +211,40 @@ void AMyCharacter::Tick(float DeltaTime)
 				m_NewPlayerHud->SetDistanceText(m_DistanceTravelled);
 			}
 			CheckDistance(m_DistanceTravelled);
+
+			//check moving left and right
+			if (m_IsDownRightClick)
+			{
+				float mouseX = 0.0f;
+				float mouseY = 0.0f;
+				m_PlayerController->GetMousePosition(mouseX, mouseY);
+
+				m_CurrentMousePosition = FVector2D(mouseX, mouseY);
+				FVector2D mouseDelta = m_InitialMousePosition - m_CurrentMousePosition;
+
+				if (!mouseDelta.IsNearlyZero(0.01f))
+				{
+					FVector2D direction = mouseDelta.GetSafeNormal();
+					float xDirection = direction.X;
+					float movePower = m_MoveSpeed * m_StrafePower;
+
+					//move the x position of the wheelchair
+					FVector turningLoc = m_Wheelchair->GetActorLocation();
+					turningLoc.X += (movePower * xDirection) * DeltaTime;
+					if (turningLoc.X >= -400.0f && turningLoc.X <= 400.0f)
+					{
+						if (turningLoc.X <= -400.0f)
+						{
+							turningLoc.X = -400.0f;
+						}
+						if (turningLoc.X >= 400.0f)
+						{
+							turningLoc.X = 400.0f;
+						}
+						m_Wheelchair->SetActorLocation(turningLoc);
+					}
+				}
+			}
 		}
 		else
 		{
@@ -255,12 +289,14 @@ void AMyCharacter::UpdateHealthStats()
 void AMyCharacter::CharacterTurn(float Value)
 {
 	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
+	if (m_IsDownRightClick) return;
 	AddControllerYawInput(Value);
 }
 
 void AMyCharacter::CharacterLookUp(float Value)
 {
 	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
+	if (m_IsDownRightClick) return;
 	AddControllerPitchInput(Value);
 }
 
@@ -301,13 +337,34 @@ void AMyCharacter::CharacterDownRightClick()
 	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
 	if (m_IsDownRightClick) return;
 	m_IsDownRightClick = true;
+
+	//lock mouse to center
+	int32 screenWidth, screenHeight;
+	m_PlayerController->GetViewportSize(screenWidth, screenHeight);
+	const float centerX = screenWidth * 0.5f;
+	const float centerY = screenHeight * 0.5f;
+	ULocalPlayer* LocalPlayer = m_PlayerController->GetLocalPlayer();
+	if (FViewport* Viewport = LocalPlayer->ViewportClient->Viewport)
+	{
+		Viewport->SetMouse(centerX, centerY);
+	}
+
+	//save the initial mouse position
+	float mouseX = 0.0f;
+	float mouseY = 0.0f;
+	m_PlayerController->GetMousePosition(mouseX, mouseY);
+	m_InitialMousePosition = FVector2D(mouseX, mouseY);
+	m_CurrentMousePosition = m_InitialMousePosition;
 }
 
 void AMyCharacter::CharacterUpRightClick()
 {
 	if (m_GameState->m_ThisGameState != E_CurrentGameState::Playing) return;
-	if (m_IsDownRightClick) return;
+	if (!m_IsDownRightClick) return;
 	m_IsDownRightClick = false;
+
+	m_InitialMousePosition = FVector2D::ZeroVector;
+	m_CurrentMousePosition = FVector2D::ZeroVector;
 }
 
 void AMyCharacter::DownPause()

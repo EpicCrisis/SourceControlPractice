@@ -79,6 +79,8 @@ public:
 	float m_StartDelay = 2.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float m_MoveSpeed = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float m_StrafePower = 3.0f;
 	UPROPERTY()
 	float m_IndexCounter = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -95,6 +97,11 @@ public:
 	//bool m_IsUpRightClick = false;
 	UPROPERTY()
 	bool m_IsDownPKey = false;
+
+	UPROPERTY()
+	FVector2D m_InitialMousePosition = FVector2D::ZeroVector;
+	UPROPERTY()
+	FVector2D m_CurrentMousePosition = FVector2D::ZeroVector;
 
 	UPROPERTY()
 	UMyGameInstance* m_MyGameInstance = nullptr;
